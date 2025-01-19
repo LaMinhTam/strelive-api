@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16.6
+    container_name: postgres_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: strelive-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - strelive-network
+  strelive-api:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: strelive-api
+    ports:
+      - "8080:8080"
+    environment:
+      DATASOURCE_NAME: PostgresDS
+      DATASOURCE_JNDI: java:jboss/jdbc/PostgresDS
+      POSTGRESQL_VERSION: 42.6.0
+      JBOSS_HOME: /opt/jboss/wildfly
+      VALID_CONNECTION_CHECKER: org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker
+    volumes:
+      - ./target:/app/target
+      - maven_cache:/root/.m2
+    networks:
+      - strelive-network
+volumes:
+  maven_cache:
+  postgres_data:
+networks:
+  strelive-network:
+    driver: bridge
