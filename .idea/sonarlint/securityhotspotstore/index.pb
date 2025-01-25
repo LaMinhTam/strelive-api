@@ -1,14 +1,4 @@
 
-n
->src/main/java/com/strelive/jakarta/hello/HelloApplication.java,a\4\a4fd314b3daa827ce87396798e40d15b77b818ad
-p
-@src/main/java/com/strelive/jakarta/hello/HelloWorldResource.java,2\5\25910842d438f8f13b4b13f55dedd3294c994b5a
-c
-3src/main/java/com/strelive/jakarta/hello/Hello.java,d\f\df74f8d214425b8da6bd9a4a1986dabdd76f1842
-f
-6src/main/java/com/strelive/jakarta/hello/strelive.java,3\3\33d50fd4749e66b8136d3d98d75cc75ac9611f0b
-f
-6src/main/java/com/strelive/jakarta/hello/Strelive.java,c\1\c1938d2a33de073ec9a5047d8cfed1992fb7b941
 O
 src/main/webapp/WEB-INF/web.xml,2\e\2e22b6edd746fa3dc40ad7276c87c8d87d72a392
 J
@@ -18,8 +8,6 @@ J
 :
 
 .gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
-Y
-)src/main/java/resources/hibernate.cfg.xml,9\5\959802de3dc41484f26199b50ae8d49ba8007293
 ]
 -src/main/java/com/strelive/entities/User.java,e\6\e6e5f8fe3808507549aa466c04e87a0b52a2bfb3
 ]
@@ -32,16 +20,6 @@ f
 6src/main/java/com/strelive/utils/HibernateFactory.java,8\d\8d5e1dee22bf6d9fe11965df86b7208b7d44999b
 f
 6src/main/java/com/strelive/utils/ImplementBaseDAO.java,9\0\903e7ed620a1ad3b9106c9bc7a913fc407b770f9
-\
-,src/main/java/com/strelive/daos/TeamDAO.java,8\a\8a05d7f466f13988185361e62bee1041be6f6464
-\
-,src/main/java/com/strelive/daos/RoleDAO.java,6\2\62ef4a2adb862b0e28af69f0bcecf99fcb557bd0
-h
-8src/main/java/com/strelive/services/TeamServiceImpl.java,e\4\e4553218ebba1300ae00ef76d8eebaccdcde41a0
-c
-3src/main/java/com/strelive/controller/TeamRest.java,0\e\0ee763d54e9328305d037fea380a55c6cb114f3a
-h
-8src/main/java/com/strelive/services/RoleServiceImpl.java,2\5\256769a2171599d8288506e105d468213828333f
 :
 
 Dockerfile,6\6\6651ddff6eb82c840ced7c1dddee15c6e1913dd4
