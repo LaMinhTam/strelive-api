@@ -1,0 +1,19 @@
+
+„
+java:S1854"<Remove this useless assignment to local variable "streamId".(µ‹¼…ıÿÿÿÿ8¯û…àÉ2J$a5eee34c-e6c0-4ced-9dc8-c8d8dd63e103
+
+java:S1854"7Remove this useless assignment to local variable "key".(Û­ì­şÿÿÿÿ8°û…àÉ2J$4d87f6b0-af05-4044-b0ff-9b2faf5311ee
+p
+java:S1481"(Remove this unused "key" local variable.(Û­ì­şÿÿÿÿ8²û…àÉ2J$14d85589-5144-4db7-b5f3-f9a410f7edbe
+u
+java:S1481"-Remove this unused "streamId" local variable.(µ‹¼…ıÿÿÿÿ8³û…àÉ2J$4ed2883e-e935-4838-aa12-e9c949dd5ab3
+c
+java:S1854"ARemove this useless assignment to local variable "recordingPath".(ó Â°ÿÿÿÿÿ8«¦––Ê2
+^
+java:S1854"<Remove this useless assignment to local variable "streamId".(ıÕúìüÿÿÿÿ8«¦––Ê2
+u
+java:S1481"-Remove this unused "streamId" local variable.(ıÕúìüÿÿÿÿ8´û…àÉ2J$b48c8539-2ad7-4b8d-b367-eda703533066
+T
+java:S1481"2Remove this unused "recordingPath" local variable.(ó Â°ÿÿÿÿÿ8­¦––Ê2
+t
+java:S1128"1Remove this unused import 'jakarta.inject.Named'.(¡†Š8®°Š–Ê2J$ee2d31f5-125e-45d9-9b7e-4e054caf9eff
