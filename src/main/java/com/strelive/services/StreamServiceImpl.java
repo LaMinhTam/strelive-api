@@ -24,8 +24,6 @@ public class StreamServiceImpl implements StreamService {
     @Override
     public StreamDTO publishDone(Map<String, String> map) {
         String streamId = map.getOrDefault("name", "");  // test is userId
-        String streamName = map.get("name"); // The stream name
-        String recordingPath = "/var/recordings/" + streamName + ".flv";
 
         return null;
     }
