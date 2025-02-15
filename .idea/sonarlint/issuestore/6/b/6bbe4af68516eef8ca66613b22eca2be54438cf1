@@ -1,15 +1,0 @@
-
-„
-java:S1854"<Remove this useless assignment to local variable "streamId".(µ‹¼…ıÿÿÿÿ8¯û…àÉ2J$e356fc36-c667-4411-baf6-7113ae787009
-
-java:S1854"7Remove this useless assignment to local variable "key".(Û­ì­şÿÿÿÿ8°û…àÉ2J$d2a687c7-9f37-46db-aff8-5d3fca4e2d83
-p
-java:S1481"(Remove this unused "key" local variable.(Û­ì­şÿÿÿÿ8²û…àÉ2J$2e86c7df-897a-45d9-a048-b2a21f6acbb8
-u
-java:S1481"-Remove this unused "streamId" local variable.(µ‹¼…ıÿÿÿÿ8³û…àÉ2J$817b4ae9-bbc5-43fb-86ce-dc3f0c9f6357
-„
-java:S1854"<Remove this useless assignment to local variable "streamId".(ıÕúìüÿÿÿÿ8«¦––Ê2J$ba8902b7-d284-4172-870f-f05393a0d7a7
-u
-java:S1481"-Remove this unused "streamId" local variable.(ıÕúìüÿÿÿÿ8´û…àÉ2J$42f4a92d-a19f-4b1e-bf47-14c01e0722a2
-t
-java:S1128"1Remove this unused import 'jakarta.inject.Named'.(¡†Š8®°Š–Ê2J$54002c10-d976-4be8-923f-ea904f11038d

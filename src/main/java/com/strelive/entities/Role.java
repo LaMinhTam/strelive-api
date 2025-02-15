@@ -1,10 +1,12 @@
 package com.strelive.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -21,7 +23,4 @@ public class Role {
     private String name;
 
     private String description;
-
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
 }

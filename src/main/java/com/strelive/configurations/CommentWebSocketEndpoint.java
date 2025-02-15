@@ -66,7 +66,8 @@ public class CommentWebSocketEndpoint {
         if (room != null) {
             for (Session client : room) {
                 try {
-                    client.getBasicRemote().sendText(message);  // Send the message to each client
+                    String messageContent = session.getRequestParameterMap().get("token").get(0) + ": " + message;
+                    client.getBasicRemote().sendText(messageContent);  // Send the message to each client
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

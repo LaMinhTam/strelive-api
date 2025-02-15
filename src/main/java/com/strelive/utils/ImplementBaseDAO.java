@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class ImplementBaseDAO<T, ID> implements BaseDAO<T, ID> {
-
     private final Class<T> classType;
 
     public ImplementBaseDAO(Class<T> classType) {

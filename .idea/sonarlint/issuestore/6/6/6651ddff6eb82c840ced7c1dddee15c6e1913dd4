@@ -1,9 +1,9 @@
 
-gdocker:S6476")Replace `as` with upper case format `AS`.(Ïñó¼J$196d07f0-47fc-4c76-a02f-2c22033f5124
-œdocker:S65701"YSurround this variable with double quotes; otherwise, it can lead to unexpected behavior.(û²é»ûÿÿÿÿJ$df2a1911-4127-4ecc-990d-b3e9606684a2
-–docker:S65702"YSurround this variable with double quotes; otherwise, it can lead to unexpected behavior.(é—¨9J$115e7277-2c0c-44c9-b7ca-cf92377edf05
-—docker:S65703"YSurround this variable with double quotes; otherwise, it can lead to unexpected behavior.(ÓòæÕJ$10c426da-1a8d-43c5-b7e1-c45c8e6d300c
-—docker:S65704"YSurround this variable with double quotes; otherwise, it can lead to unexpected behavior.(Ø„ÞéJ$226ceb3c-4a49-4a49-bb85-2e41477b0427
-—docker:S65704"YSurround this variable with double quotes; otherwise, it can lead to unexpected behavior.(Ø„ÞéJ$ecf31251-5ae2-448c-84f6-6c16ad025aad
-fdocker:S64767")Replace `as` with upper case format `AS`.(ð±ÁTJ$68da49e3-d216-4691-8c0b-98c6bd247819
-œdocker:S6570:"YSurround this variable with double quotes; otherwise, it can lead to unexpected behavior.(‹Ä³†úÿÿÿÿJ$f55f243d-bd85-407a-b311-00b3e9e20ea1
+gdocker:S6476")Replace `as` with upper case format `AS`.(Ïñó¼J$07eb704c-f270-4ae9-8643-1d48c6ba20ed
+œdocker:S65701"YSurround this variable with double quotes; otherwise, it can lead to unexpected behavior.(û²é»ûÿÿÿÿJ$a7b1360e-f5a4-4fb2-ae63-15752632d92f
+–docker:S65702"YSurround this variable with double quotes; otherwise, it can lead to unexpected behavior.(é—¨9J$f93975f8-ef09-42ce-88ec-f8f01bfe1de3
+—docker:S65703"YSurround this variable with double quotes; otherwise, it can lead to unexpected behavior.(ÓòæÕJ$34c97fd8-fe9c-419d-852a-4c17541b3bd7
+—docker:S65704"YSurround this variable with double quotes; otherwise, it can lead to unexpected behavior.(Ø„ÞéJ$6b537e79-a906-4806-a6e0-a7239058d1c9
+—docker:S65704"YSurround this variable with double quotes; otherwise, it can lead to unexpected behavior.(Ø„ÞéJ$61004860-d999-40c7-8c01-a0ac7b8ed952
+fdocker:S64767")Replace `as` with upper case format `AS`.(ð±ÁTJ$503ca29c-6e19-416d-9e89-210a4bbfb6ab
+œdocker:S6570:"YSurround this variable with double quotes; otherwise, it can lead to unexpected behavior.(‹Ä³†úÿÿÿÿJ$0008a044-7d63-47a3-8358-687ad86ec23f
