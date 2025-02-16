@@ -12,6 +12,23 @@ services:
       - SYS_ADMIN
     security_opt:
       - apparmor:unconfined
+    volumes:
+      - ./hls_storage:/var/tmp/hls
+      - ./recordings:/var/tmp/recordings
+    networks:
+      - strelive-net
+
+  python-api:
+    build: ./python-api
+    ports:
+      - "5000:5000"
+    container_name: python_api
+    volumes:
+      - ./hls_storage:/app/hls_storage
+    environment:
+      - HLS_DIRECTORY=/app/hls_storage/
+    depends_on:
+      - rtmp
     networks:
       - strelive-net
 
@@ -20,6 +37,11 @@ services:
     ports:
       - "8080:8080"
     container_name: strelive_api
+    environment:
+      - HLS_DIRECTORY=/app/hls_storage/
+      - THUMBNAIL_API_HOST=host.docker.internal
+    volumes:
+      - ./hls_storage:/app/hls_storage
     depends_on:
       - rtmp
     networks:
@@ -41,6 +63,12 @@ services:
 
 volumes:
   postgres_data:
+  hls_storage:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PWD}/hls_storage
+      o: bind
 networks:
   strelive-net:
     driver: bridge

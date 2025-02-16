@@ -9,5 +9,5 @@ public interface StreamService {
 
     StreamDTO validateStream(String key, String name);
 
-    StreamDTO publishDone(Map<String,String> map);
+    StreamDTO publishDone(String key, String name);
 }
