@@ -20,7 +20,9 @@
         <maven.compiler.release>17</maven.compiler.release>
         <jakartaee-api.version>10.0.0</jakartaee-api.version>
         <compiler-plugin.version>3.13.0</compiler-plugin.version>
+        <resteasy-multipart-provider-version>6.2.11.Final</resteasy-multipart-provider-version>
         <war-plugin.version>3.4.0</war-plugin.version>
+        <java-jwt>4.4.0</java-jwt>
         <postgres.version>42.7.3</postgres.version>
         <hibernate-core.version>6.6.3.Final</hibernate-core.version>
         <lombok.version>1.18.30</lombok.version>
@@ -44,6 +46,17 @@
             <artifactId>jakarta.jakartaee-api</artifactId>
             <version>${jakartaee-api.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-multipart-provider</artifactId>
+            <version>${resteasy-multipart-provider-version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>${java-jwt}</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>

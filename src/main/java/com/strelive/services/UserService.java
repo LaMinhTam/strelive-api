@@ -2,12 +2,16 @@ package com.strelive.services;
 
 import com.strelive.dto.*;
 
+import java.io.InputStream;
+
 public interface UserService {
-    UserResponseDTO register(RegisterRequest registerRequest);
+    LoginResponseDTO register(RegisterRequest registerRequest);
 
     LoginResponseDTO authenticate(LoginRequestDTO loginRequestDTO);
 
     ExtractToken extractToken(String token);
 
     Token refreshToken(RefreshRequest request);
+
+    boolean saveProfilePicture(InputStream fileInputStream, Long userId);
 }

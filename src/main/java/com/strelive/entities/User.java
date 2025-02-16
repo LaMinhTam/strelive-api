@@ -32,7 +32,7 @@ public class User {
 
     private String bio;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonManagedReference
     private Set<Role> roles = new HashSet<>();
 

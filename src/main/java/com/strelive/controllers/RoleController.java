@@ -7,7 +7,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("role")
+@Path("roles")
 public class RoleController {
     @Inject
     private RoleService roleService;

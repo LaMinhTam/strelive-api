@@ -39,4 +39,19 @@ public class UserDAO extends ImplementBaseDAO<User, Long> {
             return null;
         }
     }
+
+    @Transactional
+    public User saveOrUpdate(User user) {
+        try (Session session = HibernateFactory.getSession()) {
+            session.beginTransaction();
+            session.saveOrUpdate(user);
+            session.flush();
+            session.getTransaction().commit();
+            return user;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

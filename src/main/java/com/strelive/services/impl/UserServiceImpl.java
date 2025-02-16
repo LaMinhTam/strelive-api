@@ -20,8 +20,15 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.NotFoundException;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.Date;
+import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 @Stateless
 public class UserServiceImpl implements UserService {
@@ -31,17 +38,22 @@ public class UserServiceImpl implements UserService {
     private RoleService roleService;
     @Inject
     private UserMapper userMapper;
+    private static final String UPLOAD_DIR = "uploads/profile_pictures/";
 
     @Override
     @Transactional
-    public UserResponseDTO register(RegisterRequest registerRequest) {
+    public LoginResponseDTO register(RegisterRequest registerRequest) {
         User user = userMapper.toEntity(registerRequest);
         String password = user.getPassword();
         String hashedPassword = PasswordHasher.hashPassword(password);
         user.setPassword(hashedPassword);
         Role role = roleService.findByName("USER");
         user.addRole(role);
-        return userMapper.toResponseDTO(userDAO.merge(user));
+        user = userDAO.saveOrUpdate(user);
+        return new LoginResponseDTO(
+                TokenFactory.generateToken(user, TokenType.ACCESS),
+                TokenFactory.generateToken(user, TokenType.REFRESH),
+                new UserResponseDTO(user.getEmail(), user.getRoles()));
     }
 
     @Override
@@ -50,29 +62,16 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotFoundException(UserExceptionMessage.AUTHENTICATION_FAILED));
         checkPasswordValid(loginRequestDTO.getPassword(), user.getPassword());
 
-        String accessToken = generateAccessToken(loginRequestDTO.getEmail(), user.getRoles());
-        String refreshToken = generateRefreshToken(loginRequestDTO.getEmail(), user.getRoles());
-
-        UserResponseDTO userResponseDTO = createUserResponseDTO(user);
-        return new LoginResponseDTO(accessToken, refreshToken, userResponseDTO);
+        return new LoginResponseDTO(
+                TokenFactory.generateToken(user, TokenType.ACCESS),
+                TokenFactory.generateToken(user, TokenType.REFRESH),
+                new UserResponseDTO(user.getEmail(), user.getRoles()));
     }
 
     private void checkPasswordValid(String inputPassword, String storedPassword) {
         if (!PasswordHasher.hashPassword(inputPassword).equals(storedPassword)) {
             throw new NotAuthorizedException(UserExceptionMessage.AUTHENTICATION_FAILED);
         }
-    }
-
-    private String generateAccessToken(String email, Set<Role> roles) {
-        return TokenFactory.generateToken(email, roles, TokenType.ACCESS);
-    }
-
-    private String generateRefreshToken(String email, Set<Role> roles) {
-        return TokenFactory.generateToken(email, roles, TokenType.REFRESH);
-    }
-
-    private UserResponseDTO createUserResponseDTO(User user) {
-        return new UserResponseDTO(user.getEmail(), user.getRoles());
     }
 
     @Override
@@ -104,10 +103,50 @@ public class UserServiceImpl implements UserService {
         }
 
         if (expireAt.after(new Date())) {
-            String accessToken = generateAccessToken(tokenInfo.getEmail(), tokenInfo.getRole());
-            String refreshToken = generateRefreshToken(tokenInfo.getEmail(), tokenInfo.getRole());
+            String accessToken = TokenFactory.refreshAccessToken(request.getToken(), TokenType.ACCESS);
+            String refreshToken = TokenFactory.refreshAccessToken(request.getToken(), TokenType.REFRESH);
             return new Token(accessToken, refreshToken);
         }
         throw new ExpiredJwtException(null, null, UserExceptionMessage.TOKEN_EXPIRED);
+    }
+
+    @Override
+    public boolean saveProfilePicture(InputStream fileInputStream, Long userId) {
+        if (fileInputStream == null || userId == null) {
+            return false;
+        }
+
+        Optional<User> userOptional = userDAO.findById(userId);
+        if (userOptional.isEmpty()) {
+            return false;
+        }
+
+        User user = userOptional.get();
+
+        // Generate a unique filename
+        String fileName = UUID.randomUUID() + ".jpg";
+        String filePath = Paths.get(UPLOAD_DIR, fileName).toString();
+
+        // Save file to local storage
+        File directory = new File(UPLOAD_DIR);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
+        try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        // Update user profile picture in the database
+        user.setProfilePicture(fileName);
+        userDAO.merge(user);
+        return true;
     }
 }
