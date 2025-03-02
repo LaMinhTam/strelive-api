@@ -9,6 +9,7 @@ import com.strelive.exception.UserExceptionMessage;
 import com.strelive.mapper.UserMapper;
 import com.strelive.services.RoleService;
 import com.strelive.services.UserService;
+import com.strelive.utils.CloudinaryUtil;
 import com.strelive.utils.PasswordHasher;
 import com.strelive.utils.TokenFactory;
 import com.strelive.utils.TokenType;
@@ -20,13 +21,8 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.NotFoundException;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Paths;
+import java.io.*;
 import java.util.Date;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -111,42 +107,47 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean saveProfilePicture(InputStream fileInputStream, Long userId) {
-        if (fileInputStream == null || userId == null) {
+    public boolean saveProfilePicture(InputStream fileInputStream, String originalFileName, Long userId) {
+        if (fileInputStream == null || userId == null || originalFileName == null) {
             return false;
         }
 
-        Optional<User> userOptional = userDAO.findById(userId);
-        if (userOptional.isEmpty()) {
-            return false;
-        }
+        User user = userDAO.findById(userId)
+                .orElseThrow(() -> new NotFoundException(UserExceptionMessage.USER_NOT_FOUND));
 
-        User user = userOptional.get();
+        // Extract file extension from the original filename
+        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+        String fileName = UUID.randomUUID().toString() + extension;
+        String uploadDir = "uploads/profile_pictures/";
+        File file = new File(uploadDir + fileName);
 
-        // Generate a unique filename
-        String fileName = UUID.randomUUID() + ".jpg";
-        String filePath = Paths.get(UPLOAD_DIR, fileName).toString();
+        try {
+            // Ensure directories exist
+            file.getParentFile().mkdirs();
 
-        // Save file to local storage
-        File directory = new File(UPLOAD_DIR);
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
-
-        try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = fileInputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, bytesRead);
+            // Save InputStream to file
+            try (FileOutputStream outputStream = new FileOutputStream(file)) {
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
             }
+
+            // Upload to Cloudinary
+            String imageUrl = CloudinaryUtil.uploadImage(file);
+
+            // Delete file after upload
+            file.delete();
+
+            // Update user profile picture URL in the database
+            user.setProfilePicture(imageUrl);
+            userDAO.merge(user);
+
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
-
-        // Update user profile picture in the database
-        user.setProfilePicture(fileName);
-        userDAO.merge(user);
-        return true;
     }
 }

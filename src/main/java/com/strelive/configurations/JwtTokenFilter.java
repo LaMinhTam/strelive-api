@@ -24,7 +24,7 @@ public class JwtTokenFilter implements Filter {
     }
 
     public static String getCurrentToken(HttpServletRequest request) {
-        return (String) request.getAttribute(TOKEN_ATTRIBUTE);
+        return request.getHeader(AUTH_HEADER);
     }
 
     @Override

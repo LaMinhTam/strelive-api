@@ -36,7 +36,9 @@ public class AuthorizationFilter implements Filter {
 
     private static final Map<String, List<String>> PUBLIC_URL_MAPPING = Map.of(
             CONTEXT_PATH + "/api/auth", List.of(HttpMethod.GET, HttpMethod.POST),
-            CONTEXT_PATH + "/api/roles", List.of(HttpMethod.GET, HttpMethod.POST)
+            CONTEXT_PATH + "/api/roles", List.of(HttpMethod.GET, HttpMethod.POST),
+            CONTEXT_PATH + "/api/stream/auth", List.of(HttpMethod.POST),
+            CONTEXT_PATH + "/api/stream", List.of(HttpMethod.GET)
     );
 
     @Override
@@ -74,7 +76,7 @@ public class AuthorizationFilter implements Filter {
     }
 
     private boolean isWhitelisted(String url) {
-        return WHITELIST.stream().anyMatch(url::startsWith);
+        return WHITELIST.stream().anyMatch(url::startsWith) || url.startsWith(CONTEXT_PATH + "/api/stream");
     }
 
     private String validateToken(String token) throws TokenInvalidException {

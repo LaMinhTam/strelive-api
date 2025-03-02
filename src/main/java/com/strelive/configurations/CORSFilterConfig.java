@@ -42,7 +42,7 @@ public class CORSFilterConfig implements ServletContextListener {
         private void setCorsHeaders(HttpServletRequest request, HttpServletResponse response) {
             String origin = request.getHeader("Origin");
             if (ALLOWED_ORIGINS.contains(origin)) {
-                response.setHeader("Access-Control-Allow-Origin", origin);
+                response.setHeader("Access-Control-Allow-Origin", "*");
             }
             response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
             response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");

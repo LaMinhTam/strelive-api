@@ -8,8 +8,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 @Path("stream")
 public class StreamController {
@@ -39,33 +37,23 @@ public class StreamController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getVideos() {
-        File folder = new File(HLS_DIRECTORY);
-        File[] files = folder.listFiles((dir, name) -> name.endsWith(".m3u8"));
-
-        if (files == null || files.length == 0) {
-            return Response.status(Response.Status.NOT_FOUND).entity("No videos found").build();
-        }
-
-        List<String> videoList = new ArrayList<>();
-        for (File file : files) {
-            videoList.add("http://localhost:9080/hls/" + file.getName());
-        }
-
-        return Response.ok(videoList).build();
+        var videoList = streamService.getAvailableVideos();
+        return videoList.isEmpty() ?
+                Response.status(Response.Status.NOT_FOUND).entity("No videos found").build() :
+                Response.ok(videoList).build();
     }
 
     @GET
-    @Path("/{filename}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response getVideo(@PathParam("filename") String filename) {
-        File file = new File(HLS_DIRECTORY + filename);
+    @Path("/ts/{key}")
+    @Produces("video/MP2T") // Serving .ts file as video
+    public Response getTsSegment(@PathParam("key") String key) {
+        File tsFile = new File(HLS_DIRECTORY + "/" + key);
 
-        if (!file.exists() || !filename.endsWith(".m3u8")) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Video not found").build();
+        if (!tsFile.exists()) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Segment not found").build();
         }
 
-        String videoUrl = "http://localhost:9080/hls/" + filename;
-        return Response.ok(videoUrl).build();
+        return Response.ok(tsFile).build();
     }
 
 }

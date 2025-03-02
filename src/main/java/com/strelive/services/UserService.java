@@ -13,5 +13,5 @@ public interface UserService {
 
     Token refreshToken(RefreshRequest request);
 
-    boolean saveProfilePicture(InputStream fileInputStream, Long userId);
+    boolean saveProfilePicture(InputStream fileInputStream, String originalFileName, Long userId);
 }
