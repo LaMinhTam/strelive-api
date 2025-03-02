@@ -2,6 +2,7 @@ package com.strelive.controllers;
 
 import com.strelive.dto.RoleRequestDTO;
 import com.strelive.services.RoleService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -13,6 +14,7 @@ public class RoleController {
     private RoleService roleService;
 
     @POST
+    @PermitAll
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createRole(RoleRequestDTO roleRequestDTO) {
@@ -20,6 +22,7 @@ public class RoleController {
     }
 
     @GET
+    @PermitAll
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getRole(@PathParam("id") Long id) {
@@ -27,6 +30,7 @@ public class RoleController {
     }
 
     @GET
+    @PermitAll
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllRoles() {
         return Response.status(Response.Status.OK).entity(roleService.getAllRoles()).build();

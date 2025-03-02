@@ -7,6 +7,7 @@ import com.strelive.entities.User;
 import com.strelive.services.StreamService;
 import com.strelive.utils.AuthUtils;
 import com.strelive.utils.DecodeToken;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;
@@ -30,6 +31,7 @@ public class StreamController {
     @Path("/create")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("USER")
     public Response createStream(StreamCreateDTO streamCreateDTO) {
         User streamer = AuthUtils.getCurrentUser(request);  // Assume this retrieves the authenticated user
         if (streamer == null) {
@@ -42,12 +44,14 @@ public class StreamController {
     @POST
     @Path("/auth")
     @Consumes("application/x-www-form-urlencoded")
+    @RolesAllowed("USER")
     public StreamDTO validateStream(@FormParam("name") String name) {
         return streamService.validateStream(name);
     }
 
     @POST
     @Path("/publish/done")
+    @RolesAllowed("USER")
     public Response publishDone(@FormParam("key") String key, @FormParam("name") String name) {
         StreamDTO response = streamService.publishDone(name);
         if (response == null) {
@@ -60,6 +64,7 @@ public class StreamController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("USER")
     public Response getVideos() {
         var videoList = streamService.getAvailableVideos();
         return videoList.isEmpty() ?
@@ -70,6 +75,7 @@ public class StreamController {
     @GET
     @Path("/ts/{key}")
     @Produces("video/MP2T") // Serving .ts file as video
+    @RolesAllowed("USER")
     public Response getTsSegment(@PathParam("key") String key) {
         File tsFile = new File(HLS_DIRECTORY + "/" + key);
 

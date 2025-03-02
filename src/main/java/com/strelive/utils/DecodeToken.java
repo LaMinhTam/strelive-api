@@ -6,6 +6,8 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.strelive.exception.TokenInvalidException;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class DecodeToken {
 
@@ -26,9 +28,11 @@ public class DecodeToken {
         }
     }
 
-    public static String getRoleToken(String authorizationHeader) {
+    public static List<String> getRolesTokenArray(String authorizationHeader) {
         try {
-            return decodeToken(authorizationHeader).getClaim("role").asString();
+            DecodedJWT decodedJWT = decodeToken(authorizationHeader);
+            List<String> roles = decodedJWT.getClaim("roles").asList(String.class);
+            return roles.isEmpty() ? List.of() : roles;
         } catch (JWTDecodeException ex) {
             throw new TokenInvalidException(ApplicationMessage.UNAUTHORIZED);
         }

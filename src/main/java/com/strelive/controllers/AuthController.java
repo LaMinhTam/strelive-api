@@ -5,6 +5,7 @@ import com.strelive.dto.RefreshRequest;
 import com.strelive.dto.RegisterRequest;
 import com.strelive.dto.ResponseModel;
 import com.strelive.services.UserService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
@@ -17,6 +18,7 @@ public class AuthController {
     private UserService userService;
 
     @POST
+    @PermitAll
     @Path("/register")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -27,6 +29,7 @@ public class AuthController {
     }
 
     @POST
+    @PermitAll
     @Path("/login")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -37,6 +40,7 @@ public class AuthController {
     }
 
     @POST
+    @PermitAll
     @Path("/refresh")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
