@@ -18,34 +18,34 @@ services:
     networks:
       - strelive-net
 
-#  strelive-api:
-#    build: ./
-#    ports:
-#      - "8080:8080"
-#    container_name: strelive_api
-#    environment:
-#      - HLS_DIRECTORY=/app/hls_storage/
-#      - THUMBNAIL_API_HOST=host.docker.internal
-#    volumes:
-#      - ./hls_storage:/app/hls_storage
-#    depends_on:
-#      - rtmp
-#    networks:
-#      - strelive-net
-#
-#  postgres:
-#    image: postgres:16.6
-#    container_name: postgres_db
-#    ports:
-#      - "5432:5432"
-#    environment:
-#      POSTGRES_DB: strelive-db
-#      POSTGRES_USER: postgres
-#      POSTGRES_PASSWORD: 123456
-#    volumes:
-#      - postgres_data:/var/lib/postgresql/data
-#    networks:
-#      - strelive-net
+  strelive-api:
+    build: ./
+    ports:
+      - "8080:8080"
+    container_name: strelive_api
+    environment:
+      - HLS_DIRECTORY=/app/hls_storage/
+      - THUMBNAIL_API_HOST=host.docker.internal
+    volumes:
+      - ./hls_storage:/app/hls_storage
+    depends_on:
+      - rtmp
+    networks:
+      - strelive-net
+
+  postgres:
+    image: postgres:16.6
+    container_name: postgres_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: strelive-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - strelive-net
 
 volumes:
   postgres_data:

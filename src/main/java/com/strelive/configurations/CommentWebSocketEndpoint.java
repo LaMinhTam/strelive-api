@@ -15,7 +15,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @ServerEndpoint(value = "/comments/{streamId}", configurator = WebSocketConfigurator.class)
 public class CommentWebSocketEndpoint {
 
-    //    private static final CopyOnWriteArrayList<CommentWebSocketEndpoint> allClients = new CopyOnWriteArrayList<>();
     private static final Map<String, Set<Session>> rooms = new ConcurrentHashMap<>();
     private Session session;
     private String streamId;

@@ -17,8 +17,7 @@ COPY . .
 
 # Run Maven build to create the WAR file
 RUN mvn clean package
-
-# Stage 2: Configure WildFly with PostgreSQL driver and datasource
+# Stage 2: Configure WildFly with PostgreSQL driver and HTTP listener settings
 FROM quay.io/wildfly/wildfly:29.0.1.Final-jdk17 as wildfly_builder
 
 RUN /opt/jboss/wildfly/bin/add-user.sh root Aavn123!@# --silent
@@ -48,6 +47,11 @@ RUN /bin/sh -c "$JBOSS_HOME/bin/standalone.sh &" && \
   wget -O "postgresql-${POSTGRESQL_VERSION}.jar" "http://search.maven.org/remotecontent?filepath=org/postgresql/postgresql/${POSTGRESQL_VERSION}/postgresql-${POSTGRESQL_VERSION}.jar" && \
   $JBOSS_HOME/bin/jboss-cli.sh --connect --command="deploy /tmp/postgresql-${POSTGRESQL_VERSION}.jar" && \
   $JBOSS_HOME/bin/jboss-cli.sh --connect --command="data-source add --name=${DATASOURCE_NAME} --driver-name=postgresql-${POSTGRESQL_VERSION}.jar  --driver-class=org.postgresql.Driver --jndi-name=${DATASOURCE_JNDI} --connection-url=${DB_HOST}  --user-name=${DB_USER} --password=${DB_PASS} --validate-on-match=true --valid-connection-checker-class-name=${VALID_CONNECTION_CHECKER}" && \
+  $JBOSS_HOME/bin/jboss-cli.sh --connect --commands="\
+    /subsystem=undertow/server=default-server/http-listener=default:write-attribute(name=redirect-socket, value=https),\
+    /subsystem=undertow/server=default-server/http-listener=default:write-attribute(name=enable-http2, value=true),\
+    /subsystem=undertow/server=default-server/http-listener=default:write-attribute(name=read-timeout, value=0),\
+    /subsystem=undertow/server=default-server/http-listener=default:write-attribute(name=write-timeout, value=0)" && \
   $JBOSS_HOME/bin/jboss-cli.sh --connect --command=:shutdown && \
   rm -rf $JBOSS_HOME/standalone/configuration/standalone_xml_history/ $JBOSS_HOME/standalone/log/*
 
