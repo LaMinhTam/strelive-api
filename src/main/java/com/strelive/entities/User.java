@@ -96,6 +96,10 @@ public class User {
         this.roles.remove(role);
     }
 
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

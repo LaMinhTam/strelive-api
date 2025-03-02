@@ -1,6 +1,10 @@
 package com.strelive.configurations;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.strelive.dto.CommentMessage;
+import com.strelive.entities.User;
 import com.strelive.services.StreamService;
+import com.strelive.utils.AuthUtils;
 import jakarta.inject.Inject;
 import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
@@ -18,7 +22,7 @@ public class CommentWebSocketEndpoint {
     private static final Map<String, Set<Session>> rooms = new ConcurrentHashMap<>();
     private Session session;
     private String streamId;
-
+    private User user;
     @Inject
     private StreamService streamService;
 
@@ -30,11 +34,8 @@ public class CommentWebSocketEndpoint {
         rooms.computeIfAbsent(streamId, k -> new CopyOnWriteArraySet<>()).add(session);
 
         // JWT
-//        String jwt = session.getRequestParameterMap().get("token").get(0); // Example: pass JWT in the URL or headers
-//
-//        // Validate JWT and extract user information (you can use a JWT library here)
-//        String username = getUsernameFromJWT(jwt);  // Assuming you have a method to parse JWT
-//
+        String jwt = session.getRequestParameterMap().get("token").get(0);
+        user = AuthUtils.getUserDetailFromToken(jwt);
 //        // Store user data in session properties or elsewhere as needed
 //        session.getUserProperties().put("username", username);
 
@@ -65,8 +66,9 @@ public class CommentWebSocketEndpoint {
         if (room != null) {
             for (Session client : room) {
                 try {
-                    String messageContent = session.getRequestParameterMap().get("token").get(0) + ": " + message;
-                    client.getBasicRemote().sendText(messageContent);  // Send the message to each client
+                    CommentMessage commentMessage = new CommentMessage(user.getId(), user.getUsername(), user.getProfilePicture(), message);
+                    String jsonMessage = new ObjectMapper().writeValueAsString(commentMessage);
+                    client.getBasicRemote().sendText(jsonMessage);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

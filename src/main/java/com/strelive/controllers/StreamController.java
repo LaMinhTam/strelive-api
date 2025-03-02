@@ -6,7 +6,6 @@ import com.strelive.entities.Stream;
 import com.strelive.entities.User;
 import com.strelive.services.StreamService;
 import com.strelive.utils.AuthUtils;
-import com.strelive.utils.DecodeToken;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,8 +15,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.io.File;
-import java.util.Date;
-import java.util.UUID;
 
 @Path("stream")
 public class StreamController {

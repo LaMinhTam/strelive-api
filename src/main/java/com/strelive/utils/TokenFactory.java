@@ -22,6 +22,9 @@ public class TokenFactory {
         long expireTime = (type == TokenType.ACCESS) ? ACCRESS_TOKEN_EXPIRE : REFRESH_TOKEN_EXPIRE;
         return Jwts.builder()
                 .setSubject(user.getId().toString())
+                .claim("username", user.getUsername())
+                .claim("email", user.getEmail())
+                .claim("profilePicture", user.getProfilePicture())
                 .claim("roles", user.getRoles()
                         .stream().map(Role::getName).toArray(String[]::new))
                 .claim("type", type.name())

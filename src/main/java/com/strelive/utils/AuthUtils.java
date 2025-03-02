@@ -1,10 +1,6 @@
 package com.strelive.utils;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.exceptions.JWTDecodeException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.strelive.entities.User;
-import com.strelive.exception.TokenInvalidException;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class AuthUtils {
@@ -17,14 +13,23 @@ public class AuthUtils {
             return null;
         }
 
+        String token = authorizationHeader.substring(BEARER_PREFIX.length());
+        return getUserFromToken(token);
+    }
+
+    public static User getUserFromToken(String token) {
         try {
-            String subject = DecodeToken.getSubjectToken(authorizationHeader);
+            String subject = DecodeToken.getSubjectToken(token);
             User streamer = new User();
             streamer.setId(Long.valueOf(subject));
             return streamer;
         } catch (Exception e) {
             return null;  // Invalid token or subject
         }
+    }
+
+    public static User getUserDetailFromToken(String token) {
+        return DecodeToken.getUserFromToken(token);
     }
 
 }
