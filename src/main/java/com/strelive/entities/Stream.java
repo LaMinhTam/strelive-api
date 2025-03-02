@@ -34,6 +34,8 @@ public class Stream {
 
     private Date createdAt;
 
+    private Date startedAt;
+
     private Date endedAt;
 
     private String totalTime;

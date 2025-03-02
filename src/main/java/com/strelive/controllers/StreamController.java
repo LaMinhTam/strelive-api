@@ -1,31 +1,55 @@
 package com.strelive.controllers;
 
+import com.strelive.dto.StreamCreateDTO;
 import com.strelive.dto.StreamDTO;
+import com.strelive.entities.Stream;
+import com.strelive.entities.User;
 import com.strelive.services.StreamService;
+import com.strelive.utils.AuthUtils;
+import com.strelive.utils.DecodeToken;
 import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.io.File;
+import java.util.Date;
+import java.util.UUID;
 
 @Path("stream")
 public class StreamController {
     @Inject
     private StreamService streamService;
     private static final String HLS_DIRECTORY = "C:\\Users\\Administrator\\LaMinhTam\\workspace\\intellij\\strelive-api\\hls_storage\\";
+    @Context
+    private HttpServletRequest request;
+
+    @POST
+    @Path("/create")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createStream(StreamCreateDTO streamCreateDTO) {
+        User streamer = AuthUtils.getCurrentUser(request);  // Assume this retrieves the authenticated user
+        if (streamer == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        Stream stream = streamService.saveStream(streamer, streamCreateDTO);
+        return Response.ok(new StreamDTO(stream.getStreamKey())).build();
+    }
 
     @POST
     @Path("/auth")
     @Consumes("application/x-www-form-urlencoded")
-    public StreamDTO validateStream(@FormParam("key") String key, @FormParam("name") String name) {
-        return streamService.validateStream(key, name);
+    public StreamDTO validateStream(@FormParam("name") String name) {
+        return streamService.validateStream(name);
     }
 
     @POST
     @Path("/publish/done")
     public Response publishDone(@FormParam("key") String key, @FormParam("name") String name) {
-        StreamDTO response = streamService.publishDone(key, name);
+        StreamDTO response = streamService.publishDone(name);
         if (response == null) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("Failed to process stream: " + key)
