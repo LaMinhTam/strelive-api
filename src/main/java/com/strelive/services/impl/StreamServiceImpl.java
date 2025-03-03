@@ -1,6 +1,7 @@
 package com.strelive.services.impl;
 
 import com.strelive.dao.StreamDAO;
+import com.strelive.dao.StreamRepository;
 import com.strelive.dto.StreamCreateDTO;
 import com.strelive.dto.StreamDTO;
 import com.strelive.dto.VideoDTO;
@@ -27,7 +28,7 @@ public class StreamServiceImpl implements StreamService {
     private static final String BASE_VIDEO_URL = "http://localhost:9080/hls/";
     private static final String BASE_TS_URL = "http://localhost:8080/strelive-api/api/stream/ts/";
     @Inject
-    private StreamDAO streamDAO;
+    private StreamRepository streamRepository;
 
     @Override
     public com.strelive.entities.Stream saveStream(User streamer, StreamCreateDTO streamCreateDTO) {
@@ -39,18 +40,18 @@ public class StreamServiceImpl implements StreamService {
         stream.setIsLive(false);
         stream.setCreatedAt(new Date());
         stream.setStreamer(streamer);
-        return streamDAO.save(stream);
+        return streamRepository.save(stream);
     }
 
     @Override
     public StreamDTO validateStream(String name) {
-        Optional<com.strelive.entities.Stream> streamOpt = streamDAO.findByStreamKey(name);
+        Optional<com.strelive.entities.Stream> streamOpt = streamRepository.findByStreamKey(name);
         if (streamOpt.isPresent()) {
             com.strelive.entities.Stream stream = streamOpt.get();
             if (stream.getStartedAt() == null) {  // First time broadcasting
                 stream.setStartedAt(new Date());
                 stream.setIsLive(true);
-                streamDAO.update(stream);
+                streamRepository.update(stream);
             }
         }
         return null;

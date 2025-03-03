@@ -12,16 +12,16 @@ public class AuthUtils {
         if (authorizationHeader == null || !authorizationHeader.startsWith(BEARER_PREFIX)) {
             return null;
         }
-
-        String token = authorizationHeader.substring(BEARER_PREFIX.length());
-        return getUserFromToken(token);
+        return getUserFromToken(authorizationHeader);
     }
 
     public static User getUserFromToken(String token) {
         try {
             String subject = DecodeToken.getSubjectToken(token);
+            System.out.println("\n\nsubject = " + subject);
             User streamer = new User();
             streamer.setId(Long.valueOf(subject));
+            System.out.println("\n\nstreamer = " + streamer);
             return streamer;
         } catch (Exception e) {
             return null;  // Invalid token or subject

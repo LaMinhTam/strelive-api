@@ -1,6 +1,7 @@
 package com.strelive.services.impl;
 
 import com.strelive.dao.UserDAO;
+import com.strelive.dao.UserRepository;
 import com.strelive.dto.*;
 import com.strelive.entities.Role;
 import com.strelive.entities.User;
@@ -15,6 +16,8 @@ import com.strelive.utils.TokenFactory;
 import com.strelive.utils.TokenType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Stateful;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -26,10 +29,12 @@ import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
-@Stateless
+@Singleton
 public class UserServiceImpl implements UserService {
     @Inject
     private UserDAO userDAO;
+    @Inject
+    private UserRepository userRepository;
     @Inject
     private RoleService roleService;
     @Inject
@@ -45,7 +50,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(hashedPassword);
         Role role = roleService.findByName("USER");
         user.addRole(role);
-        user = userDAO.saveOrUpdate(user);
+        user = userRepository.save(user);
         return new LoginResponseDTO(
                 TokenFactory.generateToken(user, TokenType.ACCESS),
                 TokenFactory.generateToken(user, TokenType.REFRESH),
@@ -54,7 +59,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public LoginResponseDTO authenticate(LoginRequestDTO loginRequestDTO) {
-        User user = userDAO.findByEmail(loginRequestDTO.getEmail())
+        User user = userRepository.findByEmail(loginRequestDTO.getEmail())
                 .orElseThrow(() -> new NotFoundException(UserExceptionMessage.AUTHENTICATION_FAILED));
         checkPasswordValid(loginRequestDTO.getPassword(), user.getPassword());
 
@@ -112,7 +117,7 @@ public class UserServiceImpl implements UserService {
             return false;
         }
 
-        User user = userDAO.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(UserExceptionMessage.USER_NOT_FOUND));
 
         // Extract file extension from the original filename
@@ -142,7 +147,7 @@ public class UserServiceImpl implements UserService {
 
             // Update user profile picture URL in the database
             user.setProfilePicture(imageUrl);
-            userDAO.merge(user);
+            userRepository.save(user);
 
             return true;
         } catch (IOException e) {

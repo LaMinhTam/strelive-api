@@ -34,7 +34,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private ResourceInfo resourceInfo;
 
     @Override
-    public void filter(ContainerRequestContext reqCtx) throws IOException {
+    public void filter(ContainerRequestContext reqCtx) {
         Method method = resourceInfo.getResourceMethod();
         if (method.isAnnotationPresent(RolesAllowed.class)) {
             String token = getTokenFromHeader(reqCtx);
