@@ -18,7 +18,7 @@ services:
     networks:
       - strelive-net
 
-  strelive-api:
+  skilllease-api:
     build: ./
     ports:
       - "8080:8080"

@@ -62,7 +62,7 @@ FROM wildfly_builder as deployer
 RUN mkdir -p $JBOSS_HOME/standalone/deployments/
 
 # Copy the WAR file from the builder stage
-COPY --from=builder /app/target/strelive-api.war $JBOSS_HOME/standalone/deployments/
+COPY --from=builder /app/target/*.war $JBOSS_HOME/standalone/deployments/
 
 # Define the entry point for WildFly
 CMD ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]
