@@ -1,9 +1,9 @@
 package com.skilllease.exception;
 
-public final class EntityNotFoundException extends RuntimeException {
+public class EntityNotFoundException extends AppException {
 
-    public EntityNotFoundException(String message) {
-        super(message);
+    public EntityNotFoundException(BaseErrorCode errorCode) {
+        super(errorCode);
     }
 
 }

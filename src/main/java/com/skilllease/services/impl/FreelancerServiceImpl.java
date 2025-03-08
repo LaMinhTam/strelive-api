@@ -7,6 +7,7 @@ import com.skilllease.entities.Role;
 import com.skilllease.entities.Service;
 import com.skilllease.entities.User;
 import com.skilllease.exception.EntityNotFoundException;
+import com.skilllease.exception.ErrorCode;
 import com.skilllease.exception.UnauthorizedException;
 import com.skilllease.services.FreelancerService;
 import com.skilllease.services.ServiceService;
@@ -25,13 +26,13 @@ public class FreelancerServiceImpl implements FreelancerService {
     private ServiceService serviceService;
 
     @Override
-    public User findById(Long id) {
-        return userRepository.findById(id).orElse(null);
+    public User findById(Long id) throws EntityNotFoundException {
+        return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND));
     }
 
     @Override
-    public User uploadCv(Long id, CvUploadForm form) throws IOException {
-        User freelancer = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
+    public User uploadCv(Long id, CvUploadForm form) throws IOException, EntityNotFoundException {
+        User freelancer = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND));
         if (!freelancer.getRole().equals(Role.FREELANCER)) {
             throw new UnauthorizedException("Only freelancers can upload CV");
         }
@@ -46,7 +47,7 @@ public class FreelancerServiceImpl implements FreelancerService {
     }
 
     @Override
-    public Service addService(Long id, ServiceDto service) {
+    public Service addService(Long id, ServiceDto service) throws EntityNotFoundException {
         return serviceService.createService(id, service);
     }
 }

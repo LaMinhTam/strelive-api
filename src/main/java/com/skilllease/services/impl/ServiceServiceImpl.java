@@ -7,6 +7,7 @@ import com.skilllease.entities.Role;
 import com.skilllease.entities.Service;
 import com.skilllease.entities.User;
 import com.skilllease.exception.EntityNotFoundException;
+import com.skilllease.exception.ErrorCode;
 import com.skilllease.exception.UnauthorizedException;
 import com.skilllease.mapper.ServiceMapper;
 import com.skilllease.services.CategoryService;
@@ -30,11 +31,11 @@ public class ServiceServiceImpl implements ServiceService {
     private CategoryService categoryService;
 
     @Transactional
-    public Service createService(Long freelancerId, ServiceDto dto) {
+    public Service createService(Long freelancerId, ServiceDto dto) throws EntityNotFoundException {
         Service service = ServiceMapper.INSTANCE.toEntity(dto);
         // Validate category
         Category category = categoryService.findById(dto.getCategoryId())
-                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND));
         service.setCategory(category);
 
         // Set freelancer

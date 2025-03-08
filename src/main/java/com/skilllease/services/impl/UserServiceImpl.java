@@ -4,6 +4,7 @@ import com.skilllease.dao.UserRepository;
 import com.skilllease.dto.*;
 import com.skilllease.entities.Role;
 import com.skilllease.entities.User;
+import com.skilllease.exception.ErrorCode;
 import com.skilllease.exception.InvalidTokenTypeException;
 import com.skilllease.exception.UserExceptionMessage;
 import com.skilllease.mapper.UserMapper;
@@ -83,12 +84,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Token refreshToken(RefreshRequest request) {
+    public Token refreshToken(RefreshRequest request) throws InvalidTokenTypeException {
         ExtractToken tokenInfo = extractToken(request.getToken());
         Date expireAt = tokenInfo.getDate();
         String type = tokenInfo.getType();
         if (type.equals(TokenType.ACCESS.name())) {
-            throw new InvalidTokenTypeException(UserExceptionMessage.TOKEN_INVALID);
+            throw new InvalidTokenTypeException(ErrorCode.UNAUTHORIZED);
         }
 
         if (expireAt.after(new Date())) {

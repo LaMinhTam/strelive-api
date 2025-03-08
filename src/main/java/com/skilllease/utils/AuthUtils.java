@@ -1,6 +1,7 @@
 package com.skilllease.utils;
 
 import com.skilllease.entities.User;
+import com.skilllease.exception.TokenInvalidException;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class AuthUtils {
@@ -28,7 +29,7 @@ public class AuthUtils {
         }
     }
 
-    public static User getUserDetailFromToken(String token) {
+    public static User getUserDetailFromToken(String token) throws TokenInvalidException {
         return DecodeToken.getUserFromToken(token);
     }
 

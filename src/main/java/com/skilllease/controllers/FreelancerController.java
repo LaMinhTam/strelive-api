@@ -5,9 +5,11 @@ import com.skilllease.dto.ServiceDto;
 import com.skilllease.dto.UserDto;
 import com.skilllease.entities.Service;
 import com.skilllease.entities.User;
+import com.skilllease.exception.EntityNotFoundException;
 import com.skilllease.mapper.FreelancerMapper;
 import com.skilllease.services.FreelancerService;
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -26,11 +28,8 @@ public class FreelancerController {
 
     @GET
     @Path("/{id}")
-    public Response getFreelancer(@PathParam("id") Long id) {
+    public Response getFreelancer(@PathParam("id") Long id) throws EntityNotFoundException {
         var freelancer = freelancerService.findById(id);
-        if (freelancer == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
         UserDto freelancerDto = FreelancerMapper.INSTANCE.toDto(freelancer);
         return Response.ok(freelancerDto).build();
     }
@@ -39,14 +38,15 @@ public class FreelancerController {
     @Path("/{id}/cv")
     @PermitAll
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response uploadCv(@PathParam("id") Long id, @MultipartForm CvUploadForm form) throws IOException {
+    public Response uploadCv(@PathParam("id") Long id, @MultipartForm CvUploadForm form) throws IOException, EntityNotFoundException {
         return Response.ok(freelancerService.uploadCv(id, form)).build();
     }
 
     @POST
     @Path("/{id}/services")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addService(@PathParam("id") Long id, ServiceDto service) {
+    @RolesAllowed("FREELANCER")
+    public Response addService(@PathParam("id") Long id, ServiceDto service) throws EntityNotFoundException {
         Service createdService = freelancerService.addService(id, service);
         return Response.status(Response.Status.CREATED).entity(createdService).build();
     }

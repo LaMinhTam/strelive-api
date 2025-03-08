@@ -1,5 +1,8 @@
 package com.skilllease.configurations;
 
+import com.skilllease.exception.ErrorCode;
+import com.skilllease.exception.IntermediateException;
+import com.skilllease.exception.TokenInvalidException;
 import com.skilllease.exception.UnauthorizedException;
 import com.skilllease.utils.ApplicationMessage;
 import com.skilllease.utils.DecodeToken;
@@ -32,7 +35,11 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         if (method.isAnnotationPresent(RolesAllowed.class)) {
             String token = getTokenFromHeader(reqCtx);
             RolesAllowed rolesAllowed = method.getAnnotation(RolesAllowed.class);
-            checkAccess(DecodeToken.getRolesTokenArray(token), Arrays.asList(rolesAllowed.value()));
+            try {
+                checkAccess(DecodeToken.getRolesTokenArray(token), Arrays.asList(rolesAllowed.value()));
+            } catch (TokenInvalidException e) {
+                throw new IntermediateException(ErrorCode.UNAUTHORIZED);
+            }
         }
     }
 
