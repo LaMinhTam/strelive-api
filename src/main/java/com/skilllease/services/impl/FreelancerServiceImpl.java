@@ -2,7 +2,7 @@ package com.skilllease.services.impl;
 
 import com.skilllease.dao.UserRepository;
 import com.skilllease.dto.CvUploadForm;
-import com.skilllease.dto.ServiceDto;
+import com.skilllease.dto.ServiceCreateDto;
 import com.skilllease.entities.Role;
 import com.skilllease.entities.Service;
 import com.skilllease.entities.User;
@@ -47,7 +47,7 @@ public class FreelancerServiceImpl implements FreelancerService {
     }
 
     @Override
-    public Service addService(Long id, ServiceDto service) throws EntityNotFoundException {
+    public Service addService(Long id, ServiceCreateDto service) throws EntityNotFoundException {
         return serviceService.createService(id, service);
     }
 }

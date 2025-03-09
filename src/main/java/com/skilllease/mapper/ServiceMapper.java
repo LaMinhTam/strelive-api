@@ -1,5 +1,5 @@
 package com.skilllease.mapper;
-import com.skilllease.dto.ServiceDto;
+import com.skilllease.dto.ServiceCreateDto;
 import com.skilllease.entities.Service;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,7 +13,7 @@ public interface ServiceMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "categoryId", target = "category.id")
     @Mapping(target = "createdAt", expression = "java(getCurrentDateTime())")
-    Service toEntity(ServiceDto dto);
+    Service toEntity(ServiceCreateDto dto);
 
     // Define a custom method to get the current LocalDateTime
     default LocalDateTime getCurrentDateTime() {

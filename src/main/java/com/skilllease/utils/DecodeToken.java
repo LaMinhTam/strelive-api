@@ -2,6 +2,7 @@ package com.skilllease.utils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.skilllease.entities.Role;
 import com.skilllease.entities.User;
@@ -9,6 +10,7 @@ import com.skilllease.exception.ErrorCode;
 import com.skilllease.exception.TokenInvalidException;
 import lombok.NoArgsConstructor;
 
+import java.util.Arrays;
 import java.util.List;
 
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
@@ -29,7 +31,7 @@ public class DecodeToken {
         user.setId(Long.valueOf(decodedJWT.getSubject()));
         user.setFullName(decodedJWT.getClaim("fullName").asString());
         user.setEmail(decodedJWT.getClaim("email").asString());
-        user.setRole(decodedJWT.getClaim("roles").as(Role.class));
+        user.setRole(decodedJWT.getClaim("role").as(Role.class));
 
         return user;
     }
@@ -40,7 +42,7 @@ public class DecodeToken {
 
     public static List<String> getRolesTokenArray(String authorizationHeader) throws TokenInvalidException {
         DecodedJWT decodedJWT = decodeToken(authorizationHeader);
-        List<String> roles = decodedJWT.getClaim("roles").asList(String.class);
+        List<String> roles = Arrays.asList(decodedJWT.getClaim("role").asString().split(","));
         return roles.isEmpty() ? List.of() : roles;
     }
 

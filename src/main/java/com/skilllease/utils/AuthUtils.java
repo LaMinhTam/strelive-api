@@ -19,11 +19,9 @@ public class AuthUtils {
     public static User getUserFromToken(String token) {
         try {
             String subject = DecodeToken.getSubjectToken(token);
-            System.out.println("\n\nsubject = " + subject);
-            User streamer = new User();
-            streamer.setId(Long.valueOf(subject));
-            System.out.println("\n\nstreamer = " + streamer);
-            return streamer;
+            User user = new User();
+            user.setId(Long.valueOf(subject));
+            return user;
         } catch (Exception e) {
             return null;  // Invalid token or subject
         }

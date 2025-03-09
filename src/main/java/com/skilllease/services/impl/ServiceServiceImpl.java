@@ -1,7 +1,7 @@
 package com.skilllease.services.impl;
 
 import com.skilllease.dao.ServiceRepository;
-import com.skilllease.dto.ServiceDto;
+import com.skilllease.dto.ServiceCreateDto;
 import com.skilllease.entities.Category;
 import com.skilllease.entities.Role;
 import com.skilllease.entities.Service;
@@ -14,10 +14,8 @@ import com.skilllease.services.CategoryService;
 import com.skilllease.services.FreelancerService;
 import com.skilllease.services.ServiceService;
 import jakarta.ejb.Stateless;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
@@ -31,7 +29,7 @@ public class ServiceServiceImpl implements ServiceService {
     private CategoryService categoryService;
 
     @Transactional
-    public Service createService(Long freelancerId, ServiceDto dto) throws EntityNotFoundException {
+    public Service createService(Long freelancerId, ServiceCreateDto dto) throws EntityNotFoundException {
         Service service = ServiceMapper.INSTANCE.toEntity(dto);
         // Validate category
         Category category = categoryService.findById(dto.getCategoryId())

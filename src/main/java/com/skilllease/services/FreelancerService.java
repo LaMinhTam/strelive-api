@@ -1,7 +1,7 @@
 package com.skilllease.services;
 
 import com.skilllease.dto.CvUploadForm;
-import com.skilllease.dto.ServiceDto;
+import com.skilllease.dto.ServiceCreateDto;
 import com.skilllease.entities.Service;
 import com.skilllease.entities.User;
 import com.skilllease.exception.EntityNotFoundException;
@@ -16,5 +16,5 @@ public interface FreelancerService {
 
     List<Service> getServicesByFreelancer(Long id);
 
-    Service addService(Long id, ServiceDto service) throws EntityNotFoundException;
+    Service addService(Long id, ServiceCreateDto service) throws EntityNotFoundException;
 }

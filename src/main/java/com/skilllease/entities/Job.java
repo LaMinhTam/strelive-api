@@ -10,14 +10,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "job_posts")
+@Table(name = "jobs")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class JobPost {
+public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     // Reference to the employer who posted the job
     @ManyToOne(optional = false)

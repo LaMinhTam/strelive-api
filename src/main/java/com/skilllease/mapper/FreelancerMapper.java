@@ -1,6 +1,6 @@
 package com.skilllease.mapper;
 
-import com.skilllease.dto.ServiceDto;
+import com.skilllease.dto.ServiceCreateDto;
 import com.skilllease.dto.UserDto;
 import com.skilllease.entities.Service;
 import com.skilllease.entities.User;
@@ -16,7 +16,7 @@ public interface FreelancerMapper {
     @Mapping(target = "services", source = "services") // Map services separately
     UserDto toDto(User user);
 
-    ServiceDto toDto(Service service);
+    ServiceCreateDto toDto(Service service);
 
-    List<ServiceDto> toDtoList(List<Service> services);
+    List<ServiceCreateDto> toDtoList(List<Service> services);
 }

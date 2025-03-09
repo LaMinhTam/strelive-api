@@ -20,7 +20,7 @@ public class JobBid {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "job_post_id", nullable = false)
-    private JobPost jobPost;
+    private Job job;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "freelancer_id", nullable = false)
