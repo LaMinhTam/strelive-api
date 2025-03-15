@@ -34,6 +34,7 @@
         <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
         <org.eclipse.microprofile.config>3.1</org.eclipse.microprofile.config>
         <jakarta.data-api.version>1.0.0</jakarta.data-api.version>
+        <flyway-plugin.version>11.3.1</flyway-plugin.version>
     </properties>
     <dependencies>
         <dependency>
@@ -148,6 +149,17 @@
             <artifactId>jakarta.data-api</artifactId>
             <version>${jakarta.data-api.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway-plugin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
+            <version>${flyway-plugin.version}</version>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
     <build>
         <finalName>skilllease-api</finalName>
@@ -190,6 +202,30 @@
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>${flyway-plugin.version}</version>
+            </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>local</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.flywaydb</groupId>
+                        <artifactId>flyway-maven-plugin</artifactId>
+                        <version>${flyway-plugin.version}</version>
+                        <configuration>
+                            <configFiles>
+                                <configFile>src/main/resources/config/local/flyway.properties</configFile>
+                            </configFiles>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
