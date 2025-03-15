@@ -2,6 +2,7 @@ package com.skilllease.services.impl;
 
 import com.skilllease.dao.JobRepository;
 import com.skilllease.dto.JobCreateDto;
+import com.skilllease.entities.Category;
 import com.skilllease.entities.Job;
 import com.skilllease.exception.EntityNotFoundException;
 import com.skilllease.exception.ErrorCode;
@@ -25,7 +26,8 @@ public class JobServiceImpl implements JobService {
     @Transactional
     public Job createJob(JobCreateDto jobCreateDto) {
         Job job = JobMapper.INSTANCE.toEntity(jobCreateDto);
-        job.setEmployer(authService.getCurrentEmployer());
+        job.setCategory(Category.builder().id(jobCreateDto.getCategoryId()).build());
+        job.setEmployer(authService.getCurrentUser());
         job.setCreatedAt(java.time.LocalDateTime.now());
         return jobRepository.save(job);
     }
@@ -49,6 +51,7 @@ public class JobServiceImpl implements JobService {
     @Transactional
     public Job updateJob(Long id, JobCreateDto updatedJob) throws EntityNotFoundException {
         Job existing = jobRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND));
+        existing.setCategory(Category.builder().id(updatedJob.getCategoryId()).build());
         existing.setJobTitle(updatedJob.getJobTitle());
         existing.setJobDescription(updatedJob.getJobDescription());
         existing.setBudget(updatedJob.getBudget());

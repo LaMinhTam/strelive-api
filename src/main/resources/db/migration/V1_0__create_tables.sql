@@ -31,12 +31,14 @@ CREATE TABLE IF NOT EXISTS services (
 CREATE TABLE IF NOT EXISTS jobs (
                                     id BIGSERIAL PRIMARY KEY,
                                     employer_id BIGINT NOT NULL,
+                                    category_id BIGINT NOT NULL,
                                     job_title VARCHAR(255) NOT NULL,
                                     job_description TEXT,
                                     budget DECIMAL(10,2) NOT NULL,
                                     created_at TIMESTAMP NOT NULL,
                                     deadline DATE,
-                                    FOREIGN KEY (employer_id) REFERENCES users(id) ON DELETE CASCADE
+                                    FOREIGN KEY (employer_id) REFERENCES users(id) ON DELETE CASCADE,
+                                    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS job_bids (

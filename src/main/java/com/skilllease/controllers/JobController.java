@@ -9,6 +9,7 @@ import com.skilllease.services.JobService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -26,7 +27,7 @@ public class JobController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("EMPLOYER")
-    public Response createJobPost(JobCreateDto job) {
+    public Response createJobPost(@Valid JobCreateDto job) {
         Job created = jobService.createJob(job);
         return Response.status(Response.Status.CREATED).entity(created).build();
     }

@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class JobCreateDto {
     private String jobTitle;
+    private Long categoryId;
     private String jobDescription;
     private BigDecimal budget;
     private LocalDate deadline;

@@ -15,7 +15,7 @@ public interface JobRepository extends CrudRepository<Job, Long> {
     @Query("SELECT j FROM Job j WHERE j.id = :id")
     Optional<Job> findById(Long id);
 
-    @Query("SELECT j FROM Job j")
+    @Query("SELECT j FROM Job j JOIN FETCH j.category")
     Stream<Job> findAll();
 
     @Save

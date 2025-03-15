@@ -20,4 +20,5 @@ public class JobDto {
     private LocalDateTime createdAt;
     private LocalDate deadline;
     private UserDto employer;
+    private CategoryDto category;
 }
