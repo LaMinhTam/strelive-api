@@ -29,8 +29,9 @@ public class Contract {
     @JoinColumn(name = "freelancer_id", nullable = false)
     private User freelancer;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "contract_type", nullable = false)
-    private String contractType; // "direct" or "bid"
+    private ContractType contractType; // "direct" or "bid"
 
     // For direct engagements (from the SERVICES table)
     @ManyToOne
@@ -63,12 +64,24 @@ public class Contract {
     @Column(name = "final_payment_amount", nullable = false)
     private BigDecimal finalPaymentAmount;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "deposit_status", nullable = false)
-    private String depositStatus; // "pending", "paid"
+    private DepositStatus depositStatus; // "pending", "paid"
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "final_payment_status", nullable = false)
-    private String finalPaymentStatus; // "pending", "paid"
+    private PaymentStatus finalPaymentStatus; // "pending", "paid"
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    @Column(name = "employer_accepted", nullable = false)
+    private Boolean employerAccepted = false;
+
+    @Column(name = "freelancer_accepted", nullable = false)
+    private Boolean freelancerAccepted = false;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private ContractStatus status; // e.g., "draft", "negotiation", "active", "completed", "cancelled"
 }

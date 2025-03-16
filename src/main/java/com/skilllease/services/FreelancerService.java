@@ -16,5 +16,5 @@ public interface FreelancerService {
 
     List<Service> getServicesByFreelancer(Long id);
 
-    Service addService(Long id, ServiceCreateDto service) throws EntityNotFoundException;
+    Service addService(ServiceCreateDto service) throws EntityNotFoundException;
 }

@@ -15,7 +15,8 @@ public enum ErrorCode implements BaseErrorCode {
     JOB_NOT_FOUND(ExceptionMessage.JOB_NOT_FOUND, Response.Status.NOT_FOUND),
     USER_NOT_FOUND(ExceptionMessage.USER_NOT_FOUND, Response.Status.NOT_FOUND),
     JOB_BID_NOT_FOUND(ExceptionMessage.JOB_BID_NOT_FOUND, Response.Status.NOT_FOUND),
-    JOB_BID_CANNOT_BE_DELETED(ExceptionMessage.JOB_BID_CANNOT_BE_DELETED, Response.Status.BAD_REQUEST);
+    JOB_BID_CANNOT_BE_DELETED(ExceptionMessage.JOB_BID_CANNOT_BE_DELETED, Response.Status.BAD_REQUEST),
+    CONTRACT_NOT_FOUND(ExceptionMessage.CONTRACT_NOT_FOUND, Response.Status.NOT_FOUND);
 
     private final String message;
     private final Response.Status statusCode;

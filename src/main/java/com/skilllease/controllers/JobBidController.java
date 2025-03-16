@@ -4,7 +4,6 @@ import com.skilllease.dto.JobBidRequestDTO;
 import com.skilllease.dto.JobBidUpdateDto;
 import com.skilllease.entities.JobBid;
 import com.skilllease.exception.AppException;
-import com.skilllease.exception.EntityNotFoundException;
 import com.skilllease.services.JobBidService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;

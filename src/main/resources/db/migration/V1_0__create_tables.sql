@@ -68,11 +68,28 @@ CREATE TABLE IF NOT EXISTS contracts (
                                          additional_policy TEXT,
                                          deposit_amount DECIMAL(10,2) NOT NULL,
                                          final_payment_amount DECIMAL(10,2) NOT NULL,
-                                         deposit_status VARCHAR(20) NOT NULL CHECK (deposit_status IN ('pending', 'paid')),
-                                         final_payment_status VARCHAR(20) NOT NULL CHECK (final_payment_status IN ('pending', 'paid')),
+                                         deposit_status VARCHAR(20) NOT NULL CHECK (deposit_status IN ('PENDING', 'PAID')),
+                                         final_payment_status VARCHAR(20) NOT NULL CHECK (final_payment_status IN ('PENDING', 'PAID')),
                                          created_at TIMESTAMP NOT NULL,
+                                         employer_accepted BOOLEAN NOT NULL DEFAULT FALSE,
+                                         freelancer_accepted BOOLEAN NOT NULL DEFAULT FALSE,
+                                         status VARCHAR(20) NOT NULL,  -- e.g., "draft", "negotiation", "active", "completed", "cancelled"
                                          FOREIGN KEY (employer_id) REFERENCES users(id) ON DELETE CASCADE,
                                          FOREIGN KEY (freelancer_id) REFERENCES users(id) ON DELETE CASCADE,
                                          FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE SET NULL,
                                          FOREIGN KEY (job_bid_id) REFERENCES job_bids(id) ON DELETE SET NULL
+);
+
+-- MILESTONES table
+CREATE TABLE IF NOT EXISTS milestones (
+                                          id BIGSERIAL PRIMARY KEY,
+                                          contract_id INTEGER NOT NULL,
+                                          title VARCHAR(255) NOT NULL,
+                                          description TEXT,
+                                          due_date TIMESTAMP,
+                                          created_at TIMESTAMP NOT NULL,
+                                          updated_at TIMESTAMP,
+                                          deliverable_url VARCHAR(255),
+                                          review_status VARCHAR(20) NOT NULL,  -- e.g., "pending", "approved", "rejected"
+                                          FOREIGN KEY (contract_id) REFERENCES contracts(id) ON DELETE CASCADE
 );

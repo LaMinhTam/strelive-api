@@ -51,4 +51,9 @@ public class ServiceServiceImpl implements ServiceService {
     public List<Service> getServiceByUserId(Long id) {
         return null;
     }
+
+    @Override
+    public Service getServiceById(Long serviceId) throws EntityNotFoundException {
+        return serviceRepository.findById(serviceId).orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND));
+    }
 }

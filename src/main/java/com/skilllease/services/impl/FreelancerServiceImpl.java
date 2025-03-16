@@ -11,6 +11,7 @@ import com.skilllease.exception.ErrorCode;
 import com.skilllease.exception.UnauthorizedException;
 import com.skilllease.services.FreelancerService;
 import com.skilllease.services.ServiceService;
+import com.skilllease.utils.AuthService;
 import com.skilllease.utils.CloudinaryUtil;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
@@ -24,6 +25,8 @@ public class FreelancerServiceImpl implements FreelancerService {
     private UserRepository userRepository;
     @Inject
     private ServiceService serviceService;
+    @Inject
+    private AuthService authService;
 
     @Override
     public User findById(Long id) throws EntityNotFoundException {
@@ -47,7 +50,8 @@ public class FreelancerServiceImpl implements FreelancerService {
     }
 
     @Override
-    public Service addService(Long id, ServiceCreateDto service) throws EntityNotFoundException {
-        return serviceService.createService(id, service);
+    public Service addService(ServiceCreateDto service) throws EntityNotFoundException {
+        User user = authService.getCurrentUser();
+        return serviceService.createService(user.getId(), service);
     }
 }

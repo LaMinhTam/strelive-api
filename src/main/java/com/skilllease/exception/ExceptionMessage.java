@@ -19,4 +19,5 @@ public class ExceptionMessage {
     public static final String USER_NOT_FOUND = "User not found";
     public static final String JOB_BID_NOT_FOUND = "Job bid not found";
     public static final String JOB_BID_CANNOT_BE_DELETED = "Job bid cannot be deleted";
+    public static final String CONTRACT_NOT_FOUND = "Contract not found";
 }

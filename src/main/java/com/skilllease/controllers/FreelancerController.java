@@ -46,12 +46,12 @@ public class FreelancerController {
     }
 
     @POST
-    @Path("/{id}/services")
+    @Path("/services")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("FREELANCER")
-    public Response addService(@PathParam("id") Long id, ServiceCreateDto service) throws EntityNotFoundException {
-        Service createdService = freelancerService.addService(id, service);
+    public Response addService(ServiceCreateDto service) throws EntityNotFoundException {
+        Service createdService = freelancerService.addService(service);
         return Response.status(Response.Status.CREATED).entity(createdService).build();
     }
 }
