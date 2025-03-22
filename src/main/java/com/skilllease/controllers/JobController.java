@@ -1,7 +1,6 @@
 package com.skilllease.controllers;
 
 import com.skilllease.dto.JobCreateDto;
-import com.skilllease.dto.JobDto;
 import com.skilllease.entities.Job;
 import com.skilllease.exception.EntityNotFoundException;
 import com.skilllease.mapper.JobMapper;
@@ -11,7 +10,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 

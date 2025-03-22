@@ -4,11 +4,13 @@ import com.skilllease.dao.UserRepository;
 import com.skilllease.dto.*;
 import com.skilllease.entities.Role;
 import com.skilllease.entities.User;
+import com.skilllease.entities.Wallet;
 import com.skilllease.exception.ErrorCode;
 import com.skilllease.exception.InvalidTokenTypeException;
 import com.skilllease.exception.UserExceptionMessage;
 import com.skilllease.mapper.UserMapper;
 import com.skilllease.services.UserService;
+import com.skilllease.services.WalletService;
 import com.skilllease.utils.PasswordHasher;
 import com.skilllease.utils.TokenFactory;
 import com.skilllease.utils.TokenType;
@@ -20,6 +22,7 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.NotFoundException;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
@@ -30,6 +33,8 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Inject
     private UserMapper userMapper;
+    @Inject
+    private WalletService walletService;
 
     @Override
     @Transactional
@@ -40,6 +45,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(hashedPassword);
         user.setCreatedAt(LocalDateTime.now());
         user = userRepository.save(user);
+        walletService.save(Wallet.builder().balance(BigDecimal.ZERO).user(user).build());
         return new LoginResponseDTO(
                 TokenFactory.generateToken(user, TokenType.ACCESS),
                 TokenFactory.generateToken(user, TokenType.REFRESH),

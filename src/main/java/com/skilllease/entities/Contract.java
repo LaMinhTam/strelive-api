@@ -1,6 +1,5 @@
 package com.skilllease.entities;
 
-import com.skilllease.services.FreelancerService;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

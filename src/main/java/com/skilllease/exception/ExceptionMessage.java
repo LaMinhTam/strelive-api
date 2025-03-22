@@ -20,4 +20,6 @@ public class ExceptionMessage {
     public static final String JOB_BID_NOT_FOUND = "Job bid not found";
     public static final String JOB_BID_CANNOT_BE_DELETED = "Job bid cannot be deleted";
     public static final String CONTRACT_NOT_FOUND = "Contract not found";
+    public static final String INVALID_HASH_DATA = "Invalid hash data";
+    public static final String WALLET_NOT_FOUND = "Wallet not found";
 }
