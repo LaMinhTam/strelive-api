@@ -32,7 +32,7 @@ public class ContractController {
     // Retrieve a contract by its ID.
     @GET
     @Path("/{id}")
-    public Response getContract(@PathParam("id") Integer id) {
+    public Response getContract(@PathParam("id") Long id) {
         Optional<Contract> contractOpt = contractService.getContractById(id);
         return contractOpt.map(Response::ok)
                 .orElseGet(() -> Response.status(Response.Status.NOT_FOUND))
@@ -42,7 +42,7 @@ public class ContractController {
     // Endpoint for either party to update their acceptance on the contract.
     @PUT
     @Path("/{id}/accept")
-    public Response acceptContract(@PathParam("id") Integer id, ContractAcceptDto acceptDto) throws AppException {
+    public Response acceptContract(@PathParam("id") Long id, ContractAcceptDto acceptDto) throws AppException {
         Contract updatedContract = contractService.acceptContract(id, acceptDto);
         return Response.ok(updatedContract).build();
     }
@@ -50,7 +50,7 @@ public class ContractController {
     // Update overall contract status (e.g., "active", "completed", "cancelled")
     @PUT
     @Path("/{id}/status")
-    public Response updateContractStatus(@PathParam("id") Integer id, ContractStatusUpdateDto statusDto) throws AppException {
+    public Response updateContractStatus(@PathParam("id") Long id, ContractStatusUpdateDto statusDto) throws AppException {
         Contract updatedContract = contractService.updateContractStatus(id, statusDto.getStatus());
         return Response.ok(updatedContract).build();
     }

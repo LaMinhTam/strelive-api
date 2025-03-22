@@ -69,13 +69,13 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public Optional<Contract> getContractById(Integer id) {
+    public Optional<Contract> getContractById(Long id) {
         return contractRepository.findById(id);
     }
 
     @Transactional
     @Override
-    public Contract acceptContract(Integer id, ContractAcceptDto acceptDto) throws AppException {
+    public Contract acceptContract(Long id, ContractAcceptDto acceptDto) throws AppException {
         Contract contract = contractRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CONTRACT_NOT_FOUND));
         User currentUser = authService.getCurrentUser();
@@ -91,7 +91,7 @@ public class ContractServiceImpl implements ContractService {
 
     @Transactional
     @Override
-    public Contract updateContractStatus(Integer id, ContractStatus status) throws AppException {
+    public Contract updateContractStatus(Long id, ContractStatus status) throws AppException {
         Contract contract = contractRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CONTRACT_NOT_FOUND));
         User currentUser = authService.getCurrentUser();

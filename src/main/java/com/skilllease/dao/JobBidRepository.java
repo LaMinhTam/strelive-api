@@ -7,7 +7,7 @@ import jakarta.data.repository.Repository;
 import java.util.List;
 
 @Repository
-public interface JobBidRepository extends CrudRepository<JobBid, Integer> {
+public interface JobBidRepository extends CrudRepository<JobBid, Long> {
     @Query("SELECT jb FROM JobBid jb WHERE jb.job.id = :jobId")
     List<JobBid> findByJobId(Long jobId);
 }

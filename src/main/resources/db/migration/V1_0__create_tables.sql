@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS jobs
 
 CREATE TABLE IF NOT EXISTS job_bids
 (
-    id              SERIAL PRIMARY KEY,
+    id              BIGSERIAL PRIMARY KEY,
     job_post_id     BIGINT         NOT NULL,
     freelancer_id   BIGINT         NOT NULL,
     bid_amount      DECIMAL(10, 2) NOT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS job_bids
 
 CREATE TABLE IF NOT EXISTS contracts
 (
-    id                   SERIAL PRIMARY KEY,
+    id                   BIGSERIAL PRIMARY KEY,
     employer_id          BIGINT         NOT NULL,
     freelancer_id        BIGINT         NOT NULL,
     contract_type        VARCHAR(50)    NOT NULL, -- "direct" or "bid"
@@ -86,7 +86,6 @@ CREATE TABLE IF NOT EXISTS contracts
     FOREIGN KEY (job_bid_id) REFERENCES job_bids (id) ON DELETE SET NULL
 );
 
--- MILESTONES table
 CREATE TABLE IF NOT EXISTS milestones
 (
     id              BIGSERIAL PRIMARY KEY,
@@ -97,7 +96,9 @@ CREATE TABLE IF NOT EXISTS milestones
     created_at      TIMESTAMP    NOT NULL,
     updated_at      TIMESTAMP,
     deliverable_url VARCHAR(255),
-    review_status   VARCHAR(20)  NOT NULL, -- e.g., "pending", "approved", "rejected"
+    submission_type VARCHAR(20)  NOT NULL CHECK (submission_type IN ('FILE', 'LINK', 'PREVIEW')),
+    review_status   VARCHAR(20)  NOT NULL CHECK (review_status IN ('PENDING', 'APPROVED', 'REJECTED')),
+    feedback        TEXT,
     FOREIGN KEY (contract_id) REFERENCES contracts (id) ON DELETE CASCADE
 );
 

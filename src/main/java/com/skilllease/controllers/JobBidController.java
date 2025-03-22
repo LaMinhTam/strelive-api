@@ -30,7 +30,7 @@ public class JobBidController {
 
     @GET
     @Path("/{id}")
-    public Response getJobBid(@PathParam("id") Integer id) {
+    public Response getJobBid(@PathParam("id") Long id) {
         Optional<JobBid> bidOpt = jobBidService.getJobBidById(id);
         return bidOpt.map(Response::ok)
                 .orElseGet(() -> Response.status(Response.Status.NOT_FOUND))
@@ -47,7 +47,7 @@ public class JobBidController {
     @PUT
     @Path("/{id}/status")
     @RolesAllowed("EMPLOYER")
-    public Response updateJobBidStatus(@PathParam("id") Integer id, JobBidUpdateDto jobBidUpdateDto) throws AppException {
+    public Response updateJobBidStatus(@PathParam("id") Long id, JobBidUpdateDto jobBidUpdateDto) throws AppException {
         JobBid updatedBid = jobBidService.updateJobBidStatus(id, jobBidUpdateDto.getStatus());
         return Response.ok(updatedBid).build();
     }
@@ -55,7 +55,7 @@ public class JobBidController {
     @DELETE
     @Path("/{id}")
     @RolesAllowed("FREELANCER")
-    public Response deleteJobBid(@PathParam("id") Integer id) throws AppException {
+    public Response deleteJobBid(@PathParam("id") Long id) throws AppException {
         jobBidService.deleteJobBid(id);
         return Response.noContent().build();
     }

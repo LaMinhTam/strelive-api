@@ -52,7 +52,7 @@ public class JobBidServiceImpl implements JobBidService {
     }
 
     @Override
-    public Optional<JobBid> getJobBidById(Integer id) {
+    public Optional<JobBid> getJobBidById(Long id) {
         return jobBidRepository.findById(id);
     }
 
@@ -63,7 +63,7 @@ public class JobBidServiceImpl implements JobBidService {
 
     @Transactional
     @Override
-    public JobBid updateJobBidStatus(Integer bidId, String newStatus) throws AppException {
+    public JobBid updateJobBidStatus(Long bidId, String newStatus) throws AppException {
         JobBid bid = jobBidRepository.findById(bidId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.JOB_BID_NOT_FOUND));
 
@@ -86,7 +86,7 @@ public class JobBidServiceImpl implements JobBidService {
 
     @Transactional
     @Override
-    public void deleteJobBid(Integer bidId) throws AppException{
+    public void deleteJobBid(Long bidId) throws AppException{
         User freelancer =authService.getCurrentUser();
         JobBid bid = jobBidRepository.findById(bidId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.JOB_BID_NOT_FOUND));

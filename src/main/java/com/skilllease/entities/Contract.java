@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class Contract {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     // The employer who initiates the contract
     @ManyToOne(optional = false)

@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class JobBid {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "job_post_id", nullable = false)

@@ -13,10 +13,10 @@ public interface ContractService {
     @Transactional
     Contract createContract(CreateContractDto dto) throws AppException;
 
-    Optional<Contract> getContractById(Integer id);
+    Optional<Contract> getContractById(Long id);
 
-    Contract acceptContract(Integer id, ContractAcceptDto acceptDto) throws AppException;
+    Contract acceptContract(Long id, ContractAcceptDto acceptDto) throws AppException;
 
     @Transactional
-    Contract updateContractStatus(Integer id, ContractStatus status) throws AppException;
+    Contract updateContractStatus(Long id, ContractStatus status) throws AppException;
 }

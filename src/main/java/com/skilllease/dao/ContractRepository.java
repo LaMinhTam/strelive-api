@@ -5,6 +5,6 @@ import jakarta.data.repository.CrudRepository;
 import jakarta.data.repository.Repository;
 
 @Repository
-public interface ContractRepository extends CrudRepository<Contract, Integer> {
+public interface ContractRepository extends CrudRepository<Contract, Long> {
     // Additional custom queries can be added here if needed.
 }

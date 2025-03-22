@@ -2,6 +2,7 @@ package com.skilllease.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Milestone {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,10 +40,21 @@ public class Milestone {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // URL for an uploaded deliverable (image, video, document, etc.) that demonstrates progress.
+    // URL for an uploaded deliverable (file URL or external link).
     @Column(name = "deliverable_url")
     private String deliverableUrl;
 
+    // The type of submission: FILE, LINK, or PREVIEW.
+    @Enumerated(EnumType.STRING)
+    @Column(name = "submission_type", nullable = false)
+    private MilestoneSubmissionType submissionType;
+
+    // Review status by the employer: e.g., "pending", "approved", "rejected".
+    @Enumerated(EnumType.STRING)
     @Column(name = "review_status", nullable = false)
-    private String reviewStatus; // e.g., "pending", "approved", "rejected"
+    private MilestoneStatus reviewStatus;
+
+    // Optional feedback from the employer regarding the deliverable.
+    @Column(name = "feedback", columnDefinition = "TEXT")
+    private String feedback;
 }

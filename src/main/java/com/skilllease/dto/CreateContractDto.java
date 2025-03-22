@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class CreateContractDto {
     private ContractType contractType; // "direct" or "bid"
     private Long serviceId;      // Optional: for direct engagements
-    private Integer jobBidId;    // Optional: for bid engagements
+    private Long jobBidId;    // Optional: for bid engagements
     private LocalDateTime contractStartDate;
     private LocalDateTime contractEndDate;
     private Integer commitmentPeriod; // in months
