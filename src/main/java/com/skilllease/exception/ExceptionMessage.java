@@ -22,4 +22,6 @@ public class ExceptionMessage {
     public static final String CONTRACT_NOT_FOUND = "Contract not found";
     public static final String INVALID_HASH_DATA = "Invalid hash data";
     public static final String WALLET_NOT_FOUND = "Wallet not found";
+    public static final String CONTRACT_NOT_COMPLETED = "Contract must be completed before reviews can be submitted.";
+    public static final String SELF_REVIEW = "Self review is not allowed";
 }

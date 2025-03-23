@@ -25,6 +25,7 @@ import jakarta.ws.rs.NotFoundException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Optional;
 import java.util.Set;
 
 @Stateless
@@ -104,6 +105,11 @@ public class UserServiceImpl implements UserService {
             return new Token(accessToken, refreshToken);
         }
         throw new ExpiredJwtException(null, null, UserExceptionMessage.TOKEN_EXPIRED);
+    }
+
+    @Override
+    public Optional<User> getById(Long id) {
+        return userRepository.findById(id);
     }
 
 }

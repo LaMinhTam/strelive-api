@@ -120,3 +120,17 @@ CREATE TABLE IF NOT EXISTS transactions
     wallet_id BIGINT       NOT NULL,
     FOREIGN KEY (wallet_id) REFERENCES wallets (id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS reviews
+(
+    id           BIGSERIAL PRIMARY KEY,
+    contract_id  INTEGER      NOT NULL,
+    reviewer_id  BIGINT       NOT NULL,
+    reviewee_id  BIGINT       NOT NULL,
+    rating       INTEGER      NOT NULL,
+    comment      TEXT,
+    created_at   TIMESTAMP    NOT NULL,
+    FOREIGN KEY (contract_id) REFERENCES contracts (id) ON DELETE CASCADE,
+    FOREIGN KEY (reviewer_id) REFERENCES users (id) ON DELETE CASCADE,
+    FOREIGN KEY (reviewee_id) REFERENCES users (id) ON DELETE CASCADE
+);

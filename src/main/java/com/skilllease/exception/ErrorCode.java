@@ -18,7 +18,9 @@ public enum ErrorCode implements BaseErrorCode {
     JOB_BID_CANNOT_BE_DELETED(ExceptionMessage.JOB_BID_CANNOT_BE_DELETED, Response.Status.BAD_REQUEST),
     CONTRACT_NOT_FOUND(ExceptionMessage.CONTRACT_NOT_FOUND, Response.Status.NOT_FOUND),
     INVALID_HASH_DATA(ExceptionMessage.INVALID_HASH_DATA, Response.Status.BAD_REQUEST),
-    WALLET_NOT_FOUND(ExceptionMessage.WALLET_NOT_FOUND, Response.Status.BAD_REQUEST);
+    WALLET_NOT_FOUND(ExceptionMessage.WALLET_NOT_FOUND, Response.Status.BAD_REQUEST),
+    CONTRACT_NOT_COMPLETED(ExceptionMessage.CONTRACT_NOT_COMPLETED, Response.Status.BAD_REQUEST),
+    SELF_REVIEW(ExceptionMessage.SELF_REVIEW, Response.Status.BAD_REQUEST);
 
     private final String message;
     private final Response.Status statusCode;
