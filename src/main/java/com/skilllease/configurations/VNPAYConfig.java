@@ -55,7 +55,7 @@ public class VNPAYConfig {
         vnpParamsMap.put("vnp_OrderType", this.orderType);
         vnpParamsMap.put("vnp_Locale", "vn");
         vnpParamsMap.put("vnp_ReturnUrl", this.vnpReturnUrl);
-        
+
         // Set the creation and expire dates
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -64,6 +64,13 @@ public class VNPAYConfig {
         calendar.add(Calendar.MINUTE, 15);
         String vnpExpireDate = formatter.format(calendar.getTime());
         vnpParamsMap.put("vnp_ExpireDate", vnpExpireDate);
+        return vnpParamsMap;
+    }
+
+    public Map<String, String> getVNPayConfig(String customUri) {
+        String vnpUrl = this.vnpReturnUrl + customUri;
+        Map<String, String> vnpParamsMap = getVNPayConfig();
+        vnpParamsMap.put("vnp_ReturnUrl", vnpUrl);
         return vnpParamsMap;
     }
 }

@@ -20,7 +20,11 @@ public enum ErrorCode implements BaseErrorCode {
     INVALID_HASH_DATA(ExceptionMessage.INVALID_HASH_DATA, Response.Status.BAD_REQUEST),
     WALLET_NOT_FOUND(ExceptionMessage.WALLET_NOT_FOUND, Response.Status.BAD_REQUEST),
     CONTRACT_NOT_COMPLETED(ExceptionMessage.CONTRACT_NOT_COMPLETED, Response.Status.BAD_REQUEST),
-    SELF_REVIEW(ExceptionMessage.SELF_REVIEW, Response.Status.BAD_REQUEST);
+    SELF_REVIEW(ExceptionMessage.SELF_REVIEW, Response.Status.BAD_REQUEST),
+    PAYMENT_PENDING(ExceptionMessage.PAYMENT_PENDING, Response.Status.BAD_REQUEST),
+    MILESTONE_NOT_FOUND(ExceptionMessage.MILESTONE_NOT_FOUND, Response.Status.NOT_FOUND),
+    FINAL_MILESTONE_NOT_SUBMITTED(ExceptionMessage.FINAL_MILESTONE_NOT_SUBMITTED, Response.Status.BAD_REQUEST),
+    MILESTONE_NOT_APPROVED(ExceptionMessage.MILESTONE_NOT_APPROVED, Response.Status.BAD_REQUEST);
 
     private final String message;
     private final Response.Status statusCode;

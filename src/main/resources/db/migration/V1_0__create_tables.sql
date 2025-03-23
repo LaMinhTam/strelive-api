@@ -99,6 +99,8 @@ CREATE TABLE IF NOT EXISTS milestones
     submission_type VARCHAR(20)  NOT NULL CHECK (submission_type IN ('FILE', 'LINK', 'PREVIEW')),
     review_status   VARCHAR(20)  NOT NULL CHECK (review_status IN ('PENDING', 'APPROVED', 'REJECTED')),
     feedback        TEXT,
+    final_milestone BOOLEAN      NOT NULL DEFAULT FALSE,
+    hidden          BOOLEAN      NOT NULL DEFAULT FALSE,
     FOREIGN KEY (contract_id) REFERENCES contracts (id) ON DELETE CASCADE
 );
 
@@ -113,7 +115,7 @@ CREATE TABLE IF NOT EXISTS wallets
 CREATE TABLE IF NOT EXISTS transactions
 (
     id        BIGSERIAL PRIMARY KEY,
-    reference VARCHAR(255) NOT NULL,
+    reference VARCHAR(255),
     amount    DECIMAL(10, 2),
     balance   DECIMAL(10, 2),
     type      VARCHAR(20)  NOT NULL CHECK (type IN ('DEPOSIT', 'REFUND', 'PAYMENT', 'TRANSFER')),
@@ -123,13 +125,13 @@ CREATE TABLE IF NOT EXISTS transactions
 
 CREATE TABLE IF NOT EXISTS reviews
 (
-    id           BIGSERIAL PRIMARY KEY,
-    contract_id  INTEGER      NOT NULL,
-    reviewer_id  BIGINT       NOT NULL,
-    reviewee_id  BIGINT       NOT NULL,
-    rating       INTEGER      NOT NULL,
-    comment      TEXT,
-    created_at   TIMESTAMP    NOT NULL,
+    id          BIGSERIAL PRIMARY KEY,
+    contract_id INTEGER   NOT NULL,
+    reviewer_id BIGINT    NOT NULL,
+    reviewee_id BIGINT    NOT NULL,
+    rating      INTEGER   NOT NULL,
+    comment     TEXT,
+    created_at  TIMESTAMP NOT NULL,
     FOREIGN KEY (contract_id) REFERENCES contracts (id) ON DELETE CASCADE,
     FOREIGN KEY (reviewer_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (reviewee_id) REFERENCES users (id) ON DELETE CASCADE

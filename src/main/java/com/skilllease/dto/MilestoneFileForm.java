@@ -21,4 +21,7 @@ public class MilestoneFileForm {
 
     @FormParam("file")
     private InputStream file;
+
+    @FormParam
+    private boolean isFinal;
 }

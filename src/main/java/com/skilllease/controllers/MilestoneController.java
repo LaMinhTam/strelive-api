@@ -22,6 +22,13 @@ public class MilestoneController {
     @Inject
     private MilestoneService milestoneService;
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"EMPLOYER", "FREELANCER"})
+    public Response getMilestones(@QueryParam("contractId") Long contractId) {
+        return Response.ok(milestoneService.findMilestonesByContract(contractId)).build();
+    }
+
     // Create milestone submission using JSON (for LINK or PREVIEW submissions)
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -59,7 +66,7 @@ public class MilestoneController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({"EMPLOYER", "FREELANCER"})
-    public Response getMilestone(@PathParam("id") Long id) {
+    public Response getMilestone(@PathParam("id") Long id) throws AppException {
         Milestone milestone = milestoneService.getMilestoneById(id);
         return Response.ok(milestone).build();
     }

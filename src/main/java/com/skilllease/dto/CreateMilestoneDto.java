@@ -10,6 +10,7 @@ public record CreateMilestoneDto(
         String description,
         LocalDateTime dueDate,
         MilestoneSubmissionType submissionType,
-        String deliverableUrl
+        String deliverableUrl,
+        boolean isFinal
 ) {
 }

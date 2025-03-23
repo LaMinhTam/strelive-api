@@ -9,6 +9,7 @@ import com.skilllease.exception.EntityNotFoundException;
 import com.skilllease.exception.ErrorCode;
 import com.skilllease.services.ContractService;
 import com.skilllease.services.JobBidService;
+import com.skilllease.services.MilestoneService;
 import com.skilllease.services.ServiceService;
 import com.skilllease.utils.AuthService;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -28,6 +29,8 @@ public class ContractServiceImpl implements ContractService {
     private ServiceService serviceService;
     @Inject
     private AuthService authService;
+    @Inject
+    private MilestoneService milestoneService;
 
     @Transactional
     @Override
@@ -118,6 +121,41 @@ public class ContractServiceImpl implements ContractService {
             // This might involve calling additional service methods.
         }
 
+        return contractRepository.save(contract);
+    }
+
+    @Transactional
+    @Override
+    public Contract finalizeContract(Long id) throws AppException {
+        Contract contract = contractRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CONTRACT_NOT_FOUND));
+
+        // Ensure that the current user is the employer.
+        if (!authService.getCurrentUser().getId().equals(contract.getEmployer().getId())) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        // Ensure that final payment has been completed.
+        if (!contract.getFinalPaymentStatus().equals(PaymentStatus.PAID)) {
+            throw new AppException(ErrorCode.PAYMENT_PENDING);
+        }
+
+        // Ensure that the final milestone is submitted and approved.
+        // milestoneService.findFinalMilestoneByContract() returns Optional<Milestone>
+        Milestone finalMilestone = milestoneService.findFinalMilestoneByContract(contract.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.FINAL_MILESTONE_NOT_SUBMITTED));
+        if (!finalMilestone.getReviewStatus().equals(MilestoneStatus.APPROVED)) {
+            throw new AppException(ErrorCode.MILESTONE_NOT_APPROVED);
+        }
+
+        // Finalize the contract.
+        contract.setStatus(ContractStatus.COMPLETED);
+        contract.setContractEndDate(LocalDateTime.now());
+        return contractRepository.save(contract);
+    }
+
+    @Override
+    public Contract save(Contract contract) {
         return contractRepository.save(contract);
     }
 }

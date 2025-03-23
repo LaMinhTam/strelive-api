@@ -19,4 +19,8 @@ public interface ContractService {
 
     @Transactional
     Contract updateContractStatus(Long id, ContractStatus status) throws AppException;
+
+    Contract finalizeContract(Long id) throws AppException;
+
+    Contract save(Contract contract);
 }

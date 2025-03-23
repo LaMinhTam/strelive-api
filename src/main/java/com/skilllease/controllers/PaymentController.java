@@ -27,7 +27,7 @@ public class PaymentController {
     }
 
     @GET
-    @Path("/vn-pay-callback")
+    @Path("/vn-pay-callback{extra: (/.*)?}")
     public Response payCallbackHandler(@Context HttpServletRequest request) throws AppException {
         paymentService.handleVnPayCallback(request);
         String status = request.getParameter("vnp_ResponseCode");
@@ -38,5 +38,12 @@ public class PaymentController {
             redirectUri = UriBuilder.fromUri("http://localhost:3000/error").build();
         }
         return Response.seeOther(redirectUri).build();
+    }
+
+    @GET
+    @Path("/final-pay/{milestoneId}")
+    public Response finalPay(@Context HttpServletRequest request, @PathParam("milestoneId") Long milestoneId) throws AppException {
+        PaymentResponse response = paymentService.createFinalPayment(request, milestoneId);
+        return Response.ok(response).build();
     }
 }

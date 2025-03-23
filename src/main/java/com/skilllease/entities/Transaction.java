@@ -19,6 +19,7 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
+    //TxnRef
     private String reference;
 
     BigDecimal amount;

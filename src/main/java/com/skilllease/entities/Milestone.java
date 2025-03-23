@@ -57,4 +57,11 @@ public class Milestone {
     // Optional feedback from the employer regarding the deliverable.
     @Column(name = "feedback", columnDefinition = "TEXT")
     private String feedback;
+
+    @Column(name = "final_milestone", nullable = false)
+    private Boolean finalMilestone = false;
+
+    // The final milestone will be hidden until the payment is done
+    @Column(name = "hidden", nullable = false)
+    private Boolean hidden = false;
 }

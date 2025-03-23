@@ -24,4 +24,8 @@ public class ExceptionMessage {
     public static final String WALLET_NOT_FOUND = "Wallet not found";
     public static final String CONTRACT_NOT_COMPLETED = "Contract must be completed before reviews can be submitted.";
     public static final String SELF_REVIEW = "Self review is not allowed";
+    public static final String PAYMENT_PENDING = "Final payment is pending.";
+    public static final String MILESTONE_NOT_FOUND = "Milestone not found";
+    public static final String FINAL_MILESTONE_NOT_SUBMITTED = "Final milestone not submitted.";
+    public static final String MILESTONE_NOT_APPROVED = "Milestone not approved.";
 }
