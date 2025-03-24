@@ -88,19 +88,20 @@ CREATE TABLE IF NOT EXISTS contracts
 
 CREATE TABLE IF NOT EXISTS milestones
 (
-    id              BIGSERIAL PRIMARY KEY,
-    contract_id     INTEGER      NOT NULL,
-    title           VARCHAR(255) NOT NULL,
-    description     TEXT,
-    due_date        TIMESTAMP,
-    created_at      TIMESTAMP    NOT NULL,
-    updated_at      TIMESTAMP,
-    deliverable_url VARCHAR(255),
-    submission_type VARCHAR(20)  NOT NULL CHECK (submission_type IN ('FILE', 'LINK', 'PREVIEW')),
-    review_status   VARCHAR(20)  NOT NULL CHECK (review_status IN ('PENDING', 'APPROVED', 'REJECTED')),
-    feedback        TEXT,
-    final_milestone BOOLEAN      NOT NULL DEFAULT FALSE,
-    hidden          BOOLEAN      NOT NULL DEFAULT FALSE,
+    id                  BIGSERIAL PRIMARY KEY,
+    contract_id         INTEGER      NOT NULL,
+    title               VARCHAR(255) NOT NULL,
+    description         TEXT,
+    due_date            TIMESTAMP,
+    created_at          TIMESTAMP    NOT NULL,
+    updated_at          TIMESTAMP,
+    deliverable_url     VARCHAR(255),
+    submission_type     VARCHAR(20)  NOT NULL CHECK (submission_type IN ('FILE', 'LINK', 'PREVIEW')),
+    review_status       VARCHAR(20)  NOT NULL CHECK (review_status IN ('PENDING', 'APPROVED', 'REJECTED')),
+    feedback            TEXT,
+    final_milestone     BOOLEAN      NOT NULL DEFAULT FALSE,
+    hidden              BOOLEAN      NOT NULL DEFAULT FALSE,
+    fulfillment_comment TEXT,
     FOREIGN KEY (contract_id) REFERENCES contracts (id) ON DELETE CASCADE
 );
 
@@ -118,8 +119,8 @@ CREATE TABLE IF NOT EXISTS transactions
     reference VARCHAR(255),
     amount    DECIMAL(10, 2),
     balance   DECIMAL(10, 2),
-    type      VARCHAR(20)  NOT NULL CHECK (type IN ('DEPOSIT', 'REFUND', 'PAYMENT', 'TRANSFER')),
-    wallet_id BIGINT       NOT NULL,
+    type      VARCHAR(20) NOT NULL CHECK (type IN ('DEPOSIT', 'REFUND', 'PAYMENT', 'TRANSFER')),
+    wallet_id BIGINT      NOT NULL,
     FOREIGN KEY (wallet_id) REFERENCES wallets (id) ON DELETE CASCADE
 );
 

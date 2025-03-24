@@ -1,9 +1,7 @@
 package com.skilllease.services.impl;
 
 import com.skilllease.dao.MilestoneRepository;
-import com.skilllease.dto.CreateMilestoneDto;
-import com.skilllease.dto.MilestoneFileForm;
-import com.skilllease.dto.MilestoneReviewDto;
+import com.skilllease.dto.*;
 import com.skilllease.entities.Contract;
 import com.skilllease.entities.Milestone;
 import com.skilllease.entities.MilestoneStatus;
@@ -44,6 +42,59 @@ public class MilestoneServiceImpl implements MilestoneService {
             }
         }
         return milestones;
+    }
+
+    @Override
+    public Milestone createMilestoneInstruction(CreateMilestoneInstructionDto dto) throws AppException {
+        Contract contract = contractService.getContractById(dto.contractId())
+                .orElseThrow(() -> new AppException(ErrorCode.CONTRACT_NOT_FOUND));
+        // Ensure current user is the employer.
+        if (!contract.getEmployer().getId().equals(authService.getCurrentUser().getId())) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+        Milestone milestone = Milestone.builder()
+                .contract(contract)
+                .title(dto.title())
+                .description(dto.description())
+                .submissionType(dto.submissionType())
+                .reviewStatus(MilestoneStatus.PENDING)
+                .finalMilestone(dto.isFinal())
+                .hidden(dto.isFinal())
+                .dueDate(dto.dueDate())
+                .createdAt(LocalDateTime.now())
+                .build();
+        return milestoneRepository.save(milestone);
+    }
+
+    @Override
+    public Milestone fulfillMilestone(Long id, FulfillMilestoneDto dto) throws AppException {
+        Milestone milestone = milestoneRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.MILESTONE_NOT_FOUND));
+        // Ensure current user is the freelancer.
+        if (!milestone.getContract().getFreelancer().getId().equals(authService.getCurrentUser().getId())) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+        milestone.setDeliverableUrl(dto.deliverableUrl());
+        milestone.setFulfillmentComment(dto.fulfillmentComment());
+        milestone.setReviewStatus(MilestoneStatus.PENDING);
+        milestone.setUpdatedAt(LocalDateTime.now());
+        return milestoneRepository.update(milestone);
+    }
+
+    @Override
+    public Milestone fulfillMilestoneWithFile(Long id, FulfillMilestoneFileForm form) throws IOException, AppException {
+        Milestone milestone = milestoneRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.MILESTONE_NOT_FOUND));
+        // Ensure the current user is the freelancer.
+        if (!milestone.getContract().getFreelancer().getId().equals(authService.getCurrentUser().getId())) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+        // Upload the file and get the URL.
+        String fileUrl = CloudinaryUtil.uploadFile(form.getFile(), form.getFileName());
+        milestone.setDeliverableUrl(fileUrl);
+        milestone.setFulfillmentComment(form.getFulfillmentComment());
+        milestone.setUpdatedAt(LocalDateTime.now());
+        return milestoneRepository.update(milestone);
     }
 
     @Override

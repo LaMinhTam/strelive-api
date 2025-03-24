@@ -1,8 +1,6 @@
 package com.skilllease.services;
 
-import com.skilllease.dto.CreateMilestoneDto;
-import com.skilllease.dto.MilestoneFileForm;
-import com.skilllease.dto.MilestoneReviewDto;
+import com.skilllease.dto.*;
 import com.skilllease.entities.Milestone;
 import com.skilllease.exception.AppException;
 
@@ -24,4 +22,10 @@ public interface MilestoneService {
     Milestone updateMilestone(Milestone milestone);
 
     List<Milestone> findMilestonesByContract(Long contractId);
+
+    Milestone createMilestoneInstruction(CreateMilestoneInstructionDto dto) throws AppException;
+
+    Milestone fulfillMilestone(Long id, FulfillMilestoneDto dto) throws AppException;
+
+    Milestone fulfillMilestoneWithFile(Long id, FulfillMilestoneFileForm form) throws IOException, AppException;
 }

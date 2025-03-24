@@ -1,8 +1,6 @@
 package com.skilllease.controllers;
 
-import com.skilllease.dto.CreateMilestoneDto;
-import com.skilllease.dto.MilestoneFileForm;
-import com.skilllease.dto.MilestoneReviewDto;
+import com.skilllease.dto.*;
 import com.skilllease.entities.Milestone;
 import com.skilllease.exception.AppException;
 import com.skilllease.services.MilestoneService;
@@ -29,14 +27,35 @@ public class MilestoneController {
         return Response.ok(milestoneService.findMilestonesByContract(contractId)).build();
     }
 
-    // Create milestone submission using JSON (for LINK or PREVIEW submissions)
     @POST
+    @Path("/instruction")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("EMPLOYER")
+    public Response createMilestoneInstruction(CreateMilestoneInstructionDto dto) throws AppException {
+        Milestone milestone = milestoneService.createMilestoneInstruction(dto);
+        return Response.status(Response.Status.CREATED).entity(milestone).build();
+    }
+
+    @PUT
+    @Path("/{id}/fulfill")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("FREELANCER")
-    public Response createMilestone(CreateMilestoneDto dto) throws AppException {
-        Milestone milestone = milestoneService.createMilestone(dto);
-        return Response.status(Response.Status.CREATED).entity(milestone).build();
+    public Response fulfillMilestone(@PathParam("id") Long id, FulfillMilestoneDto dto) throws AppException {
+        Milestone milestone = milestoneService.fulfillMilestone(id, dto);
+        return Response.ok(milestone).build();
+    }
+
+    @POST
+    @Path("/{id}/fulfill/file")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("FREELANCER")
+    public Response fulfillMilestoneWithFile(@PathParam("id") Long id,
+                                             @MultipartForm FulfillMilestoneFileForm form) throws IOException, AppException {
+        Milestone milestone = milestoneService.fulfillMilestoneWithFile(id, form);
+        return Response.ok(milestone).build();
     }
 
     // Create milestone submission with a file upload

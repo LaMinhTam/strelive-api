@@ -64,4 +64,9 @@ public class Milestone {
     // The final milestone will be hidden until the payment is done
     @Column(name = "hidden", nullable = false)
     private Boolean hidden = false;
+
+    // New field: Freelancer's report on what was done, what might be missing, etc.
+    @Column(name = "fulfillment_comment", columnDefinition = "TEXT")
+    private String fulfillmentComment;
+
 }
