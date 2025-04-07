@@ -28,4 +28,6 @@ public class ExceptionMessage {
     public static final String MILESTONE_NOT_FOUND = "Milestone not found";
     public static final String FINAL_MILESTONE_NOT_SUBMITTED = "Final milestone not submitted.";
     public static final String MILESTONE_NOT_APPROVED = "Milestone not approved.";
+    public static final String MILESTONE_IN_PROGRESS = "Milestone not in progress.";
+    public static final String INSUFFICIENT_BALANCE = "Insufficient balance.";
 }

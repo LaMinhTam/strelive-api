@@ -2,9 +2,7 @@ package com.skilllease.services.impl;
 
 import com.skilllease.dao.UserRepository;
 import com.skilllease.dto.CvUploadForm;
-import com.skilllease.dto.ServiceCreateDto;
 import com.skilllease.entities.Role;
-import com.skilllease.entities.Service;
 import com.skilllease.entities.User;
 import com.skilllease.exception.EntityNotFoundException;
 import com.skilllease.exception.ErrorCode;
@@ -17,7 +15,6 @@ import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 
 import java.io.IOException;
-import java.util.List;
 
 @Stateless
 public class FreelancerServiceImpl implements FreelancerService {
@@ -44,14 +41,4 @@ public class FreelancerServiceImpl implements FreelancerService {
         return userRepository.update(freelancer);
     }
 
-    @Override
-    public List<Service> getServicesByFreelancer(Long id) {
-        return serviceService.getServiceByUserId(id);
-    }
-
-    @Override
-    public Service addService(ServiceCreateDto service) throws EntityNotFoundException {
-        User user = authService.getCurrentUser();
-        return serviceService.createService(user.getId(), service);
-    }
 }

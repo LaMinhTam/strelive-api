@@ -17,7 +17,6 @@ public class CreateContractDto {
     private Long jobBidId;    // Optional: for bid engagements
     private LocalDateTime contractStartDate;
     private LocalDateTime contractEndDate;
-    private Integer commitmentPeriod; // in months
     private String supportAvailability; // e.g., "24/7 support"
     
     // The field for additional policy input:

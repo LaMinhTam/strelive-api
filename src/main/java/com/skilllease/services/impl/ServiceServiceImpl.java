@@ -13,6 +13,7 @@ import com.skilllease.mapper.ServiceMapper;
 import com.skilllease.services.CategoryService;
 import com.skilllease.services.FreelancerService;
 import com.skilllease.services.ServiceService;
+import com.skilllease.utils.AuthService;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -27,6 +28,25 @@ public class ServiceServiceImpl implements ServiceService {
     private FreelancerService freelancerService;
     @Inject
     private CategoryService categoryService;
+    @Inject
+    private AuthService authService;
+
+    @Override
+    public Service addService(ServiceCreateDto service) throws EntityNotFoundException {
+        User user = authService.getCurrentUser();
+        return createService(user.getId(), service);
+    }
+
+    @Override
+    public Service updateService(Long serviceId, ServiceCreateDto serviceDto) throws EntityNotFoundException {
+        Service service = serviceRepository.findById(serviceId).orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND));
+        service.setDescription(serviceDto.getDescription());
+        service.setPrice(serviceDto.getPrice());
+        service.setTitle(serviceDto.getTitle());
+        service.setCategory(categoryService.findById(serviceDto.getCategoryId())
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND)));
+        return serviceRepository.update(service);
+    }
 
     @Transactional
     public Service createService(Long freelancerId, ServiceCreateDto dto) throws EntityNotFoundException {
@@ -49,11 +69,17 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public List<Service> getServiceByUserId(Long id) {
-        return null;
+        return serviceRepository.findByFreelancerId(id);
     }
 
     @Override
     public Service getServiceById(Long serviceId) throws EntityNotFoundException {
         return serviceRepository.findById(serviceId).orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND));
     }
+
+    @Override
+    public List<Service> getAllServices() {
+        return serviceRepository.findAll().toList();
+    }
+
 }

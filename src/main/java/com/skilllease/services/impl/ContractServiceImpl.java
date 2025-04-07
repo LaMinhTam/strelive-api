@@ -1,28 +1,28 @@
 package com.skilllease.services.impl;
 
 import com.skilllease.dao.ContractRepository;
-import com.skilllease.dto.ContractAcceptDto;
 import com.skilllease.dto.CreateContractDto;
+import com.skilllease.dto.JobDetailDTO;
 import com.skilllease.entities.*;
 import com.skilllease.exception.AppException;
 import com.skilllease.exception.EntityNotFoundException;
 import com.skilllease.exception.ErrorCode;
-import com.skilllease.services.ContractService;
-import com.skilllease.services.JobBidService;
-import com.skilllease.services.MilestoneService;
-import com.skilllease.services.ServiceService;
+import com.skilllease.services.*;
 import com.skilllease.utils.AuthService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 @ApplicationScoped
 public class ContractServiceImpl implements ContractService {
     @Inject
     private ContractRepository contractRepository;
+    @Inject
+    private JobService jobService;
     @Inject
     private JobBidService jobBidService;
     @Inject
@@ -37,14 +37,16 @@ public class ContractServiceImpl implements ContractService {
     public Contract createContract(CreateContractDto dto) throws AppException {
         // Only an employer can create a contract.
         User currentUser = authService.getCurrentUser();
+        if (!currentUser.getRole().equals(Role.EMPLOYER)) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
         Contract contract = new Contract();
         contract.setEmployer(currentUser);
         // The freelancer, service, or job bid would typically be set after selection,
         // but you can let the employer pre-fill if desired.
         contract.setContractType(dto.getContractType());
         if (dto.getContractType().equals(ContractType.BID)) {
-            JobBid jobBid = jobBidService.getJobBidById(dto.getJobBidId())
-                    .orElseThrow(() -> new EntityNotFoundException(ErrorCode.JOB_BID_NOT_FOUND));
+            JobBid jobBid = jobBidService.getJobBidById(dto.getJobBidId());
             contract.setJobBid(jobBid);
             contract.setFreelancer(jobBid.getFreelancer());
         } else if (dto.getContractType().equals(ContractType.DIRECT)) {
@@ -54,7 +56,6 @@ public class ContractServiceImpl implements ContractService {
         }
         contract.setContractStartDate(dto.getContractStartDate());
         contract.setContractEndDate(dto.getContractEndDate());
-        contract.setCommitmentPeriod(dto.getCommitmentPeriod());
         contract.setSupportAvailability(dto.getSupportAvailability());
         // Here is where the employer inputs additional policy:
         contract.setAdditionalPolicy(dto.getAdditionalPolicy());
@@ -62,9 +63,7 @@ public class ContractServiceImpl implements ContractService {
         contract.setFinalPaymentAmount(dto.getFinalPaymentAmount());
         contract.setCreatedAt(LocalDateTime.now());
         // Set initial acceptance flags and status.
-        contract.setEmployerAccepted(false);
-        contract.setFreelancerAccepted(false);
-        contract.setStatus(ContractStatus.DRAFT);
+        contract.setStatus(ContractStatus.NEGOTIATION);
         contract.setDepositStatus(DepositStatus.PENDING);
         contract.setFinalPaymentStatus(PaymentStatus.PENDING);
         jobBidService.updateJobBidStatus(dto.getJobBidId(), "accepted");
@@ -72,22 +71,26 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public Optional<Contract> getContractById(Long id) {
-        return contractRepository.findById(id);
+    public Contract getContractById(Long id) throws AppException {
+        return contractRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.CONTRACT_NOT_FOUND));
     }
 
     @Transactional
     @Override
-    public Contract acceptContract(Long id, ContractAcceptDto acceptDto) throws AppException {
+    public Contract updateContractStatus(Long id, boolean isAccepted) throws AppException {
         Contract contract = contractRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CONTRACT_NOT_FOUND));
         User currentUser = authService.getCurrentUser();
-        // Update the acceptance flag only for the current user.
         if (currentUser.getId().equals(contract.getEmployer().getId())) {
-            contract.setEmployerAccepted(acceptDto.getEmployerAccepted());
+            contract.setEmployerAccepted(isAccepted);
+        } else if (currentUser.getId().equals(contract.getFreelancer().getId())) {
+            contract.setFreelancerAccepted(isAccepted);
         }
-        if (currentUser.getId().equals(contract.getFreelancer().getId())) {
-            contract.setFreelancerAccepted(acceptDto.getFreelancerAccepted());
+        if(contract.getEmployerAccepted() != null && contract.getEmployerAccepted() && contract.getFreelancerAccepted() != null && contract.getFreelancerAccepted()) {
+            contract.setStatus(ContractStatus.ACTIVE);
+            contract.setDepositStatus(DepositStatus.PAID);
+        } else {
+            contract.setStatus(ContractStatus.NEGOTIATION);
         }
         return contractRepository.save(contract);
     }
@@ -157,5 +160,22 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public Contract save(Contract contract) {
         return contractRepository.save(contract);
+    }
+
+    @Override
+    public JobDetailDTO getContractsByJob(Long jobId) throws AppException {
+        return jobService.getJob(jobId);
+    }
+
+    @Override
+    public List<JobDetailDTO> getAllContracts() {
+        User currentUser = authService.getCurrentUser();
+        List<Contract> contracts = new ArrayList<>();
+        if(currentUser.getRole().equals(Role.FREELANCER)) {
+            contracts = contractRepository.findByFreelancerId(currentUser.getId()).toList();
+        } else if(currentUser.getRole().equals(Role.EMPLOYER)) {
+            contracts = contractRepository.findByEmployerId(currentUser.getId()).toList();
+        }
+        return contracts.stream().map(contract -> new JobDetailDTO(contract.getJobBid().getJob(), null, contract)).toList();
     }
 }

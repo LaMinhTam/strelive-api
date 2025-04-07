@@ -1,5 +1,6 @@
 package com.skilllease.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,8 +39,9 @@ public class Contract {
     private Service service;
 
     // For bid engagements (from the JOB_BIDS table)
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "job_bid_id")
+    @JsonIgnore
     private JobBid jobBid;
 
     @Column(name = "contract_start_date", nullable = false)
@@ -47,9 +49,6 @@ public class Contract {
 
     @Column(name = "contract_end_date")
     private LocalDateTime contractEndDate;
-
-    @Column(name = "commitment_period")
-    private Integer commitmentPeriod; // in months
 
     @Column(name = "support_availability")
     private String supportAvailability; // e.g., "24/7 support"
@@ -74,13 +73,13 @@ public class Contract {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "employer_accepted", nullable = false)
-    private Boolean employerAccepted = false;
+    @Column(name = "employer_accepted")
+    private Boolean employerAccepted;
 
-    @Column(name = "freelancer_accepted", nullable = false)
-    private Boolean freelancerAccepted = false;
+    @Column(name = "freelancer_accepted")
+    private Boolean freelancerAccepted;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private ContractStatus status; // e.g., "draft", "negotiation", "active", "completed", "cancelled"
+    private ContractStatus status; // e.g., "negotiation", "active", "completed", "cancelled"
 }

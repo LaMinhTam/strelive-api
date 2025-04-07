@@ -1,7 +1,9 @@
 package com.skilllease.controllers;
 
+import com.skilllease.dto.ResponseModel;
 import com.skilllease.dto.ReviewRequestDTO;
 import com.skilllease.entities.Review;
+import com.skilllease.exception.AppException;
 import com.skilllease.services.ReviewService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -23,13 +25,9 @@ public class ReviewController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({"EMPLOYER", "FREELANCER"})
-    public Response createReview(ReviewRequestDTO reviewRequestDTO) {
-        try {
-            Review review = reviewService.createReview(reviewRequestDTO);
-            return Response.status(Response.Status.CREATED).entity(review).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-        }
+    public Response createReview(ReviewRequestDTO reviewRequestDTO) throws AppException {
+        Review review = reviewService.createReview(reviewRequestDTO);
+        return Response.status(Response.Status.CREATED).entity(ResponseModel.builder().data(review).build()).build();
     }
 
     // Endpoint for retrieving reviews for a specific user.
@@ -38,7 +36,7 @@ public class ReviewController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getReviewsByUser(@PathParam("userId") Long userId) {
         List<Review> reviews = reviewService.getReviewsByUser(userId);
-        return Response.ok(reviews).build();
+        return Response.ok(ResponseModel.builder().data(reviews).build()).build();
     }
 
     @GET
@@ -46,6 +44,6 @@ public class ReviewController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getReviewsByContract(@PathParam("contractId") Long contractId) {
         List<Review> reviews = reviewService.getReviewsByContract(contractId);
-        return Response.ok(reviews).build();
+        return Response.ok(ResponseModel.builder().data(reviews).build()).build();
     }
 }

@@ -69,4 +69,7 @@ public class Milestone {
     @Column(name = "fulfillment_comment", columnDefinition = "TEXT")
     private String fulfillmentComment;
 
+    @Column(name = "checklist", columnDefinition = "TEXT")
+    private String checklist; // Markdown-formatted checklist content
+
 }

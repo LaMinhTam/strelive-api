@@ -2,9 +2,15 @@ package com.skilllease.dao;
 
 import com.skilllease.entities.Contract;
 import jakarta.data.repository.CrudRepository;
+import jakarta.data.repository.Query;
 import jakarta.data.repository.Repository;
+
+import java.util.stream.Stream;
 
 @Repository
 public interface ContractRepository extends CrudRepository<Contract, Long> {
-    // Additional custom queries can be added here if needed.
+    @Query("SELECT c FROM Contract c WHERE c.freelancer.id = ?1")
+    Stream<Contract> findByFreelancerId(Long id);
+    @Query("SELECT c FROM Contract c WHERE c.employer.id = ?1")
+    Stream<Contract> findByEmployerId(Long id);
 }

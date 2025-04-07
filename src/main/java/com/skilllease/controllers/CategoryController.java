@@ -1,8 +1,8 @@
 package com.skilllease.controllers;
 
+import com.skilllease.dto.ResponseModel;
 import com.skilllease.entities.Category;
 import com.skilllease.services.CategoryService;
-import com.skilllease.services.UserService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -21,13 +21,13 @@ public class CategoryController {
     @Produces(MediaType.APPLICATION_JSON)
     @PermitAll
     public Response getCategories() {
-        return Response.ok(categoryService.getCategories()).build();
+        return Response.ok(ResponseModel.builder().data(categoryService.getCategories()).build()).build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createCategory(Category category) {
-        return Response.ok().entity(categoryService.createCategory(category)).build();
+        return Response.ok().entity(ResponseModel.builder().data(categoryService.createCategory(category)).build()).build();
     }
 }

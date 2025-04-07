@@ -2,7 +2,6 @@ package com.skilllease.services.impl;
 
 import com.skilllease.dao.JobBidRepository;
 import com.skilllease.dao.JobRepository;
-import com.skilllease.dao.UserRepository;
 import com.skilllease.dto.JobBidRequestDTO;
 import com.skilllease.entities.Job;
 import com.skilllease.entities.JobBid;
@@ -19,7 +18,6 @@ import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @ApplicationScoped
 public class JobBidServiceImpl implements JobBidService {
@@ -43,17 +41,22 @@ public class JobBidServiceImpl implements JobBidService {
         bid.setJob(job);
         bid.setFreelancer(freelancer);
         bid.setBidAmount(dto.getBidAmount());
-        bid.setCommitmentDays(dto.getCommitmentDays());
         bid.setMessage(dto.getMessage());
         bid.setCreatedAt(LocalDateTime.now());
+        bid.setProposedStartDate(dto.getProposedStartDate());
+        bid.setProposedEndDate(dto.getProposedEndDate());
+        bid.setSupportAvailability(dto.getSupportAvailability());
+        bid.setAdditionalPolicy(dto.getAdditionalPolicy());
         bid.setStatus("pending");
+        bid.setDepositAmount(dto.getDepositAmount());
+        bid.setFinalPaymentAmount(dto.getFinalPaymentAmount());
 
         return jobBidRepository.save(bid);
     }
 
     @Override
-    public Optional<JobBid> getJobBidById(Long id) {
-        return jobBidRepository.findById(id);
+    public JobBid getJobBidById(Long id) throws AppException {
+        return jobBidRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.JOB_BID_NOT_FOUND));
     }
 
     @Override

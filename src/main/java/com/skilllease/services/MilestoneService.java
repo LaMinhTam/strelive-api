@@ -9,10 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MilestoneService {
-    Milestone createMilestone(CreateMilestoneDto dto) throws AppException;
-
-    Milestone createMilestoneWithFile(MilestoneFileForm form) throws IOException, AppException;
-
     Milestone reviewMilestone(Long id, MilestoneReviewDto dto) throws AppException;
 
     Milestone getMilestoneById(Long id) throws AppException;
@@ -28,4 +24,8 @@ public interface MilestoneService {
     Milestone fulfillMilestone(Long id, FulfillMilestoneDto dto) throws AppException;
 
     Milestone fulfillMilestoneWithFile(Long id, FulfillMilestoneFileForm form) throws IOException, AppException;
+
+    Milestone updateMilestone(Long id, UpdateMilestoneDto dto) throws AppException;
+
+    void deleteMilestone(Long id) throws AppException;
 }

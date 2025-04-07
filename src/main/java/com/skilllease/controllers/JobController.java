@@ -1,7 +1,9 @@
 package com.skilllease.controllers;
 
 import com.skilllease.dto.JobCreateDto;
+import com.skilllease.dto.ResponseModel;
 import com.skilllease.entities.Job;
+import com.skilllease.exception.AppException;
 import com.skilllease.exception.EntityNotFoundException;
 import com.skilllease.mapper.JobMapper;
 import com.skilllease.services.JobService;
@@ -27,7 +29,7 @@ public class JobController {
     @RolesAllowed("EMPLOYER")
     public Response createJobPost(@Valid JobCreateDto job) {
         Job created = jobService.createJob(job);
-        return Response.status(Response.Status.CREATED).entity(created).build();
+        return Response.status(Response.Status.CREATED).entity(ResponseModel.builder().data(created).build()).build();
     }
 
     @GET
@@ -35,8 +37,8 @@ public class JobController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({"EMPLOYER", "FREELANCER"})
-    public Response getJob(@PathParam("id") Long id) throws EntityNotFoundException {
-        return Response.ok(jobService.getJob(id)).build();
+    public Response getJob(@PathParam("id") Long id) throws AppException {
+        return Response.ok(ResponseModel.builder().data(jobService.getJob(id)).build()).build();
     }
 
     @GET
@@ -47,7 +49,7 @@ public class JobController {
         List<Job> jobs = (employerId != null)
                 ? jobService.getJobsByEmployer(employerId)
                 : jobService.getAllJobs();
-        return Response.ok(JobMapper.INSTANCE.toDtoList(jobs)).build();
+        return Response.ok(ResponseModel.builder().data(JobMapper.INSTANCE.toDtoList(jobs)).build()).build();
     }
 
 
@@ -57,7 +59,7 @@ public class JobController {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("EMPLOYER")
     public Response updateJob(@PathParam("id") Long id, JobCreateDto job) throws EntityNotFoundException {
-        return Response.ok(jobService.updateJob(id, job)).build();
+        return Response.ok(ResponseModel.builder().data(jobService.updateJob(id, job)).build()).build();
     }
 
     @DELETE

@@ -1,5 +1,6 @@
 package com.skilllease.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,8 +30,11 @@ public class JobBid {
     @Column(name = "bid_amount", nullable = false)
     private BigDecimal bidAmount;
 
-    @Column(name = "commitment_days", nullable = false)
-    private Integer commitmentDays;
+    @Column(name = "deposit_amount", nullable = false)
+    private BigDecimal depositAmount;
+
+    @Column(name = "final_payment_amount", nullable = false)
+    private BigDecimal finalPaymentAmount;
 
     @Column(columnDefinition = "TEXT")
     private String message;
@@ -40,5 +44,21 @@ public class JobBid {
 
     @Column(nullable = false)
     private String status; // "pending", "accepted", "rejected"
+
+    @Column(name = "proposed_start_date")
+    private LocalDateTime proposedStartDate;
+
+    @Column(name = "proposed_end_date")
+    private LocalDateTime proposedEndDate;
+
+    @Column(name = "support_availability")
+    private String supportAvailability;
+
+    @Column(name = "additional_policy", columnDefinition = "TEXT")
+    private String additionalPolicy;
+
+    @OneToOne(mappedBy = "jobBid", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Contract contract;
 
 }

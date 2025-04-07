@@ -24,7 +24,9 @@ public enum ErrorCode implements BaseErrorCode {
     PAYMENT_PENDING(ExceptionMessage.PAYMENT_PENDING, Response.Status.BAD_REQUEST),
     MILESTONE_NOT_FOUND(ExceptionMessage.MILESTONE_NOT_FOUND, Response.Status.NOT_FOUND),
     FINAL_MILESTONE_NOT_SUBMITTED(ExceptionMessage.FINAL_MILESTONE_NOT_SUBMITTED, Response.Status.BAD_REQUEST),
-    MILESTONE_NOT_APPROVED(ExceptionMessage.MILESTONE_NOT_APPROVED, Response.Status.BAD_REQUEST);
+    MILESTONE_NOT_APPROVED(ExceptionMessage.MILESTONE_NOT_APPROVED, Response.Status.BAD_REQUEST),
+    MILESTONE_IN_PROGRESS(ExceptionMessage.MILESTONE_IN_PROGRESS, Response.Status.BAD_REQUEST),
+    INSUFFICIENT_BALANCE(ExceptionMessage.INSUFFICIENT_BALANCE, Response.Status.BAD_REQUEST);
 
     private final String message;
     private final Response.Status statusCode;

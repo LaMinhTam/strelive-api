@@ -33,9 +33,8 @@ public class ReviewServiceImpl implements ReviewService {
     private AuthService authService;
 
     @Override
-    public Review createReview(ReviewRequestDTO reviewRequestDTO) throws Exception {
-        Contract contract = contractService.getContractById(reviewRequestDTO.contractId())
-                .orElseThrow(() -> new AppException(ErrorCode.CONTRACT_NOT_FOUND));
+    public Review createReview(ReviewRequestDTO reviewRequestDTO) throws AppException {
+        Contract contract = contractService.getContractById(reviewRequestDTO.contractId());
         
         // Check that the contract is completed before reviewing.
         if (!contract.getStatus().equals(ContractStatus.COMPLETED)) {

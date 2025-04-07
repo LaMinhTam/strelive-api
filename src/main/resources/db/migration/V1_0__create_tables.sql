@@ -1,12 +1,14 @@
 CREATE TABLE IF NOT EXISTS users
 (
-    id         BIGSERIAL PRIMARY KEY,
-    full_name  VARCHAR(255) NOT NULL,
-    email      VARCHAR(255) NOT NULL UNIQUE,
-    password   VARCHAR(255) NOT NULL,
-    role       VARCHAR(20)  NOT NULL CHECK (role IN ('FREELANCER', 'EMPLOYER')),
-    cv_url     VARCHAR(255),
-    created_at TIMESTAMP    NOT NULL
+    id                  BIGSERIAL PRIMARY KEY,
+    full_name           VARCHAR(255) NOT NULL,
+    email               VARCHAR(255) NOT NULL UNIQUE,
+    password            VARCHAR(255) NOT NULL,
+    role                VARCHAR(20)  NOT NULL CHECK (role IN ('FREELANCER', 'EMPLOYER')),
+    cv_url              VARCHAR(255),
+    profile_picture_url VARCHAR(255),
+    created_at          TIMESTAMP    NOT NULL,
+    rating              FLOAT CHECK (rating >= 0 AND rating <= 5)
 );
 
 CREATE TABLE IF NOT EXISTS categories
@@ -47,14 +49,19 @@ CREATE TABLE IF NOT EXISTS jobs
 
 CREATE TABLE IF NOT EXISTS job_bids
 (
-    id              BIGSERIAL PRIMARY KEY,
-    job_post_id     BIGINT         NOT NULL,
-    freelancer_id   BIGINT         NOT NULL,
-    bid_amount      DECIMAL(10, 2) NOT NULL,
-    commitment_days INT            NOT NULL,
-    message         TEXT,
-    created_at      TIMESTAMP      NOT NULL,
-    status          VARCHAR(20)    NOT NULL CHECK (status IN ('pending', 'accepted', 'rejected')),
+    id                   BIGSERIAL PRIMARY KEY,
+    job_post_id          BIGINT         NOT NULL,
+    freelancer_id        BIGINT         NOT NULL,
+    bid_amount           DECIMAL(10, 2) NOT NULL,
+    message              TEXT,
+    created_at           TIMESTAMP      NOT NULL,
+    status               VARCHAR(20)    NOT NULL CHECK (status IN ('pending', 'accepted', 'rejected')),
+    proposed_start_date  TIMESTAMP,
+    proposed_end_date    TIMESTAMP,
+    support_availability VARCHAR(255),
+    additional_policy    TEXT,
+    deposit_amount       DECIMAL(10, 2),
+    final_payment_amount DECIMAL(10, 2),
     FOREIGN KEY (job_post_id) REFERENCES jobs (id) ON DELETE CASCADE,
     FOREIGN KEY (freelancer_id) REFERENCES users (id) ON DELETE CASCADE
 );
@@ -69,7 +76,6 @@ CREATE TABLE IF NOT EXISTS contracts
     job_bid_id           INT,
     contract_start_date  TIMESTAMP      NOT NULL,
     contract_end_date    TIMESTAMP,
-    commitment_period    INT,
     support_availability VARCHAR(255),
     additional_policy    TEXT,
     deposit_amount       DECIMAL(10, 2) NOT NULL,
@@ -77,8 +83,8 @@ CREATE TABLE IF NOT EXISTS contracts
     deposit_status       VARCHAR(20)    NOT NULL CHECK (deposit_status IN ('PENDING', 'PAID')),
     final_payment_status VARCHAR(20)    NOT NULL CHECK (final_payment_status IN ('PENDING', 'PAID')),
     created_at           TIMESTAMP      NOT NULL,
-    employer_accepted    BOOLEAN        NOT NULL DEFAULT FALSE,
-    freelancer_accepted  BOOLEAN        NOT NULL DEFAULT FALSE,
+    employer_accepted    BOOLEAN,
+    freelancer_accepted  BOOLEAN,
     status               VARCHAR(20)    NOT NULL, -- e.g., "draft", "negotiation", "active", "completed", "cancelled"
     FOREIGN KEY (employer_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (freelancer_id) REFERENCES users (id) ON DELETE CASCADE,
@@ -97,11 +103,12 @@ CREATE TABLE IF NOT EXISTS milestones
     updated_at          TIMESTAMP,
     deliverable_url     VARCHAR(255),
     submission_type     VARCHAR(20)  NOT NULL CHECK (submission_type IN ('FILE', 'LINK', 'PREVIEW')),
-    review_status       VARCHAR(20)  NOT NULL CHECK (review_status IN ('PENDING', 'APPROVED', 'REJECTED')),
+    review_status       VARCHAR(20)  NOT NULL CHECK (review_status IN ('PENDING', 'APPROVED', 'REJECTED', 'IN_PROGRESS')),
     feedback            TEXT,
     final_milestone     BOOLEAN      NOT NULL DEFAULT FALSE,
     hidden              BOOLEAN      NOT NULL DEFAULT FALSE,
     fulfillment_comment TEXT,
+    checklist           TEXT,
     FOREIGN KEY (contract_id) REFERENCES contracts (id) ON DELETE CASCADE
 );
 

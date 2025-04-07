@@ -6,13 +6,12 @@ import com.skilllease.exception.AppException;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface JobBidService {
     @Transactional
     JobBid createJobBid(JobBidRequestDTO dto) throws AppException;
 
-    Optional<JobBid> getJobBidById(Long id);
+    JobBid getJobBidById(Long id) throws AppException;
 
     List<JobBid> getJobBidsByJob(Long jobId);
 

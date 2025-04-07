@@ -2,6 +2,7 @@ package com.skilllease.controllers;
 
 import com.skilllease.dto.JobBidRequestDTO;
 import com.skilllease.dto.JobBidUpdateDto;
+import com.skilllease.dto.ResponseModel;
 import com.skilllease.entities.JobBid;
 import com.skilllease.exception.AppException;
 import com.skilllease.services.JobBidService;
@@ -10,9 +11,6 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
-import java.util.List;
-import java.util.Optional;
 
 @Path("/job-bids")
 @Produces(MediaType.APPLICATION_JSON)
@@ -25,23 +23,19 @@ public class JobBidController {
     @RolesAllowed("FREELANCER")
     public Response createJobBid(JobBidRequestDTO bidRequest) throws AppException {
         JobBid bid = jobBidService.createJobBid(bidRequest);
-        return Response.status(Response.Status.CREATED).entity(bid).build();
+        return Response.status(Response.Status.CREATED).entity(ResponseModel.builder().data(bid).build()).build();
     }
 
     @GET
     @Path("/{id}")
-    public Response getJobBid(@PathParam("id") Long id) {
-        Optional<JobBid> bidOpt = jobBidService.getJobBidById(id);
-        return bidOpt.map(Response::ok)
-                .orElseGet(() -> Response.status(Response.Status.NOT_FOUND))
-                .build();
+    public Response getJobBid(@PathParam("id") Long id) throws AppException {
+        return Response.ok(ResponseModel.builder().data(jobBidService.getJobBidById(id)).build()).build();
     }
 
     @GET
     @Path("/job/{jobId}")
     public Response getJobBidsByJob(@PathParam("jobId") Long jobId) {
-        List<JobBid> bids = jobBidService.getJobBidsByJob(jobId);
-        return Response.ok(bids).build();
+        return Response.ok(ResponseModel.builder().data(jobBidService.getJobBidsByJob(jobId)).build()).build();
     }
 
     @PUT
@@ -49,7 +43,7 @@ public class JobBidController {
     @RolesAllowed("EMPLOYER")
     public Response updateJobBidStatus(@PathParam("id") Long id, JobBidUpdateDto jobBidUpdateDto) throws AppException {
         JobBid updatedBid = jobBidService.updateJobBidStatus(id, jobBidUpdateDto.getStatus());
-        return Response.ok(updatedBid).build();
+        return Response.ok(ResponseModel.builder().data(updatedBid).build()).build();
     }
 
     @DELETE

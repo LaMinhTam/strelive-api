@@ -26,4 +26,6 @@ public class FulfillMilestoneFileForm {
     @FormParam("fileName")
     @PartType("text/plain")
     private String fileName;
+
+    private String checklist;
 }

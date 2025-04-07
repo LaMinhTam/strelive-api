@@ -1,5 +1,6 @@
 package com.skilllease.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -23,8 +24,10 @@ public class Wallet {
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User user;
 
     @OneToMany(mappedBy = "wallet", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Transaction> transactions;
 }

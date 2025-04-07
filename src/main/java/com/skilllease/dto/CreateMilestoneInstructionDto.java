@@ -10,6 +10,7 @@ public record CreateMilestoneInstructionDto(
         String description,
         LocalDateTime dueDate,
         boolean isFinal,
-        MilestoneSubmissionType submissionType
+        MilestoneSubmissionType submissionType,
+        String checklist
 ) {
 }

@@ -35,10 +35,17 @@ public class User {
     @Column(name = "cv_url")
     private String cvUrl;
 
+    @Column(name = "profile_picture_url")
+    private String profilePictureUrl;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "freelancer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Service> services;
+
+    @Column
+    private Float rating;
+
 }

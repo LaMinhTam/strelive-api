@@ -5,15 +5,14 @@ import com.skilllease.dto.*;
 import com.skilllease.entities.Role;
 import com.skilllease.entities.User;
 import com.skilllease.entities.Wallet;
+import com.skilllease.exception.AppException;
 import com.skilllease.exception.ErrorCode;
 import com.skilllease.exception.InvalidTokenTypeException;
 import com.skilllease.exception.UserExceptionMessage;
 import com.skilllease.mapper.UserMapper;
 import com.skilllease.services.UserService;
 import com.skilllease.services.WalletService;
-import com.skilllease.utils.PasswordHasher;
-import com.skilllease.utils.TokenFactory;
-import com.skilllease.utils.TokenType;
+import com.skilllease.utils.*;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.ejb.Stateless;
@@ -22,6 +21,7 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.NotFoundException;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -36,6 +36,8 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     @Inject
     private WalletService walletService;
+    @Inject
+    private AuthService authService;
 
     @Override
     @Transactional
@@ -50,7 +52,7 @@ public class UserServiceImpl implements UserService {
         return new LoginResponseDTO(
                 TokenFactory.generateToken(user, TokenType.ACCESS),
                 TokenFactory.generateToken(user, TokenType.REFRESH),
-                new UserResponseDTO(user.getEmail(), user.getRole()));
+                new UserResponseDTO(user.getId(), user.getFullName(), user.getEmail(), user.getRole(), user.getCvUrl(), user.getProfilePictureUrl()));
     }
 
     @Override
@@ -62,7 +64,7 @@ public class UserServiceImpl implements UserService {
         return new LoginResponseDTO(
                 TokenFactory.generateToken(user, TokenType.ACCESS),
                 TokenFactory.generateToken(user, TokenType.REFRESH),
-                new UserResponseDTO(user.getEmail(), user.getRole()));
+                new UserResponseDTO(user.getId(), user.getFullName(), user.getEmail(), user.getRole(), user.getCvUrl(), user.getProfilePictureUrl()));
     }
 
     private void checkPasswordValid(String inputPassword, String storedPassword) {
@@ -110,6 +112,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> getById(Long id) {
         return userRepository.findById(id);
+    }
+
+    @Override
+    public User uploadProfilePicture(ProfilePictureForm form) throws IOException, AppException {
+        User user = authService.getCurrentUser();
+        if (user == null) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+        user = userRepository.findById(user.getId()).orElseThrow(() -> new NotFoundException(UserExceptionMessage.USER_NOT_FOUND));
+        String profilePictureUrl = CloudinaryUtil.uploadFile(form.getFile(), form.getFileName());
+        user.setProfilePictureUrl(profilePictureUrl);
+        return userRepository.update(user);
     }
 
 }

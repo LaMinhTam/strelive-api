@@ -1,9 +1,8 @@
 package com.skilllease.controllers;
 
 import com.skilllease.dto.CvUploadForm;
-import com.skilllease.dto.ServiceCreateDto;
+import com.skilllease.dto.ResponseModel;
 import com.skilllease.dto.UserDto;
-import com.skilllease.entities.Service;
 import com.skilllease.exception.EntityNotFoundException;
 import com.skilllease.mapper.FreelancerMapper;
 import com.skilllease.services.FreelancerService;
@@ -32,7 +31,7 @@ public class FreelancerController {
     public Response getFreelancer(@PathParam("id") Long id) throws EntityNotFoundException {
         var freelancer = freelancerService.findById(id);
         UserDto freelancerDto = FreelancerMapper.INSTANCE.toDto(freelancer);
-        return Response.ok(freelancerDto).build();
+        return Response.ok(ResponseModel.builder().data(freelancerDto).build()).build();
     }
 
     @POST
@@ -42,16 +41,6 @@ public class FreelancerController {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("FREELANCER")
     public Response uploadCv(@PathParam("id") Long id, @MultipartForm CvUploadForm form) throws IOException, EntityNotFoundException {
-        return Response.ok(freelancerService.uploadCv(id, form)).build();
-    }
-
-    @POST
-    @Path("/services")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed("FREELANCER")
-    public Response addService(ServiceCreateDto service) throws EntityNotFoundException {
-        Service createdService = freelancerService.addService(service);
-        return Response.status(Response.Status.CREATED).entity(createdService).build();
+        return Response.ok(ResponseModel.builder().data(freelancerService.uploadCv(id, form)).build()).build();
     }
 }

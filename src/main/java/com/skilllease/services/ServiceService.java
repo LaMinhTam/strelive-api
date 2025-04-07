@@ -5,7 +5,6 @@ import com.skilllease.entities.Service;
 import com.skilllease.exception.EntityNotFoundException;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ServiceService {
     Service createService(Long freelancerId, ServiceCreateDto dto) throws EntityNotFoundException;
@@ -13,4 +12,10 @@ public interface ServiceService {
     List<Service> getServiceByUserId(Long id);
 
     Service getServiceById(Long serviceId) throws EntityNotFoundException;
+
+    List<Service> getAllServices();
+
+    Service addService(ServiceCreateDto service) throws EntityNotFoundException;
+
+    Service updateService(Long serviceId, ServiceCreateDto service) throws EntityNotFoundException;
 }

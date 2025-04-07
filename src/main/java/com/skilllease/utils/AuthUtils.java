@@ -1,5 +1,6 @@
 package com.skilllease.utils;
 
+import com.skilllease.entities.Role;
 import com.skilllease.entities.User;
 import com.skilllease.exception.TokenInvalidException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +22,7 @@ public class AuthUtils {
             String subject = DecodeToken.getSubjectToken(token);
             User user = new User();
             user.setId(Long.valueOf(subject));
+            user.setRole(Role.valueOf(DecodeToken.getRolesTokenArray(token).get(0)));
             return user;
         } catch (Exception e) {
             return null;  // Invalid token or subject
