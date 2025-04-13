@@ -1,24 +1,24 @@
 package com.skilllease.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.skilllease.entities.MilestoneStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class JobCreateDto {
+public class MilestoneCreateDto {
     private Long id;
-    private String jobTitle;
-    private Long categoryId;
-    private String jobDescription;
-    private BigDecimal budget;
-    private LocalDate deadline;
-    private List<MilestoneCreateDto> milestones;
+    private String title;
+    private String description;
+    private LocalDate startDate;
+    private LocalDate dueDate;
+    private MilestoneStatus reviewStatus;
+    private String checklist;
+    private int effort;
 }

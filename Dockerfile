@@ -31,8 +31,8 @@ ENV JBOSS_HOME /opt/jboss/wildfly
 ENV VALID_CONNECTION_CHECKER org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker
 
 # Define database environment variables (these will be overridden by docker-compose)
-ARG DB_HOST=jdbc:postgresql://postgres:5432/strelive-db
-ARG DB_NAME=strelive-db
+ARG DB_HOST=jdbc:postgresql://postgres:5432/skilllease-db
+ARG DB_NAME=skilllease-db
 ARG DB_USER=postgres
 ARG DB_PASS=123456
 

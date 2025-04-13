@@ -1,12 +1,14 @@
 package com.skilllease.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "milestones")
@@ -19,10 +21,10 @@ public class Milestone {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // The contract to which this milestone belongs.
     @ManyToOne(optional = false)
-    @JoinColumn(name = "contract_id", nullable = false)
-    private Contract contract;
+    @JoinColumn(name = "job_id", nullable = false)
+    @JsonIgnore
+    private Job job;
 
     @Column(name = "title", nullable = false)
     private String title;
@@ -30,15 +32,12 @@ public class Milestone {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate;
+
     // Optional due date for the milestone.
     @Column(name = "due_date")
-    private LocalDateTime dueDate;
-
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    private LocalDate dueDate;
 
     // URL for an uploaded deliverable (file URL or external link).
     @Column(name = "deliverable_url")
@@ -46,20 +45,17 @@ public class Milestone {
 
     // The type of submission: FILE, LINK, or PREVIEW.
     @Enumerated(EnumType.STRING)
-    @Column(name = "submission_type", nullable = false)
+    @Column(name = "submission_type")
     private MilestoneSubmissionType submissionType;
 
     // Review status by the employer: e.g., "pending", "approved", "rejected".
     @Enumerated(EnumType.STRING)
-    @Column(name = "review_status", nullable = false)
+    @Column(name = "review_status")
     private MilestoneStatus reviewStatus;
 
     // Optional feedback from the employer regarding the deliverable.
     @Column(name = "feedback", columnDefinition = "TEXT")
     private String feedback;
-
-    @Column(name = "final_milestone", nullable = false)
-    private Boolean finalMilestone = false;
 
     // The final milestone will be hidden until the payment is done
     @Column(name = "hidden", nullable = false)
@@ -72,4 +68,9 @@ public class Milestone {
     @Column(name = "checklist", columnDefinition = "TEXT")
     private String checklist; // Markdown-formatted checklist content
 
+    @Column(name = "amount", nullable = false)
+    private BigDecimal amount;
+
+    @Column(name = "effort", nullable = false)
+    private int effort;
 }

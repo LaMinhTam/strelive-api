@@ -13,6 +13,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,19 +55,24 @@ public class ContractServiceImpl implements ContractService {
             contract.setService(service);
             contract.setFreelancer(service.getFreelancer());
         }
-        contract.setContractStartDate(dto.getContractStartDate());
-        contract.setContractEndDate(dto.getContractEndDate());
-        contract.setSupportAvailability(dto.getSupportAvailability());
+        contract.setContractStartDate(dto.getContractStartDate().atStartOfDay());
+        contract.setContractEndDate(dto.getContractEndDate().atStartOfDay());
         // Here is where the employer inputs additional policy:
         contract.setAdditionalPolicy(dto.getAdditionalPolicy());
-        contract.setDepositAmount(dto.getDepositAmount());
-        contract.setFinalPaymentAmount(dto.getFinalPaymentAmount());
         contract.setCreatedAt(LocalDateTime.now());
         // Set initial acceptance flags and status.
         contract.setStatus(ContractStatus.NEGOTIATION);
-        contract.setDepositStatus(DepositStatus.PENDING);
-        contract.setFinalPaymentStatus(PaymentStatus.PENDING);
+        contract.setEmployerAccepted(true);
         jobBidService.updateJobBidStatus(dto.getJobBidId(), "accepted");
+
+        List<Milestone> milestone = milestoneService.findMilestonesByJobId(contract.getJobBid().getJob().getId());
+        BigDecimal amount = contract.getJobBid().getBidAmount();
+        //base on the effort to update the amount, the effort will be show as percentage
+        for (Milestone m : milestone) {
+            m.setAmount(amount.multiply(BigDecimal.valueOf(m.getEffort())).divide(BigDecimal.valueOf(100)));
+        }
+        milestoneService.updateAll(milestone);
+
         return contractRepository.save(contract);
     }
 
@@ -86,9 +92,8 @@ public class ContractServiceImpl implements ContractService {
         } else if (currentUser.getId().equals(contract.getFreelancer().getId())) {
             contract.setFreelancerAccepted(isAccepted);
         }
-        if(contract.getEmployerAccepted() != null && contract.getEmployerAccepted() && contract.getFreelancerAccepted() != null && contract.getFreelancerAccepted()) {
+        if (contract.getEmployerAccepted() != null && contract.getEmployerAccepted() && contract.getFreelancerAccepted() != null && contract.getFreelancerAccepted()) {
             contract.setStatus(ContractStatus.ACTIVE);
-            contract.setDepositStatus(DepositStatus.PAID);
         } else {
             contract.setStatus(ContractStatus.NEGOTIATION);
         }
@@ -127,36 +132,6 @@ public class ContractServiceImpl implements ContractService {
         return contractRepository.save(contract);
     }
 
-    @Transactional
-    @Override
-    public Contract finalizeContract(Long id) throws AppException {
-        Contract contract = contractRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CONTRACT_NOT_FOUND));
-
-        // Ensure that the current user is the employer.
-        if (!authService.getCurrentUser().getId().equals(contract.getEmployer().getId())) {
-            throw new AppException(ErrorCode.UNAUTHORIZED);
-        }
-
-        // Ensure that final payment has been completed.
-        if (!contract.getFinalPaymentStatus().equals(PaymentStatus.PAID)) {
-            throw new AppException(ErrorCode.PAYMENT_PENDING);
-        }
-
-        // Ensure that the final milestone is submitted and approved.
-        // milestoneService.findFinalMilestoneByContract() returns Optional<Milestone>
-        Milestone finalMilestone = milestoneService.findFinalMilestoneByContract(contract.getId())
-                .orElseThrow(() -> new AppException(ErrorCode.FINAL_MILESTONE_NOT_SUBMITTED));
-        if (!finalMilestone.getReviewStatus().equals(MilestoneStatus.APPROVED)) {
-            throw new AppException(ErrorCode.MILESTONE_NOT_APPROVED);
-        }
-
-        // Finalize the contract.
-        contract.setStatus(ContractStatus.COMPLETED);
-        contract.setContractEndDate(LocalDateTime.now());
-        return contractRepository.save(contract);
-    }
-
     @Override
     public Contract save(Contract contract) {
         return contractRepository.save(contract);
@@ -171,11 +146,19 @@ public class ContractServiceImpl implements ContractService {
     public List<JobDetailDTO> getAllContracts() {
         User currentUser = authService.getCurrentUser();
         List<Contract> contracts = new ArrayList<>();
-        if(currentUser.getRole().equals(Role.FREELANCER)) {
+        if (currentUser.getRole().equals(Role.FREELANCER)) {
             contracts = contractRepository.findByFreelancerId(currentUser.getId()).toList();
-        } else if(currentUser.getRole().equals(Role.EMPLOYER)) {
+        } else if (currentUser.getRole().equals(Role.EMPLOYER)) {
             contracts = contractRepository.findByEmployerId(currentUser.getId()).toList();
         }
+        for (Contract contract : contracts) {
+            contract.getJobBid().getJob().setMilestones(milestoneService.findMilestonesByJobId(contract.getJobBid().getJob().getId()));
+        }
         return contracts.stream().map(contract -> new JobDetailDTO(contract.getJobBid().getJob(), null, contract)).toList();
+    }
+
+    @Override
+    public Contract getContractByJobId(Long jobId) throws AppException {
+        return contractRepository.findByJobId(jobId).orElseThrow(() -> new AppException(ErrorCode.CONTRACT_NOT_FOUND));
     }
 }

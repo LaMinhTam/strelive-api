@@ -1,6 +1,6 @@
 package com.skilllease.controllers;
 
-import com.skilllease.dto.PaymentResponse;
+import com.skilllease.dto.paymentResponse;
 import com.skilllease.dto.ResponseModel;
 import com.skilllease.exception.AppException;
 import com.skilllease.services.impl.PaymentService;
@@ -23,7 +23,7 @@ public class PaymentController {
     @GET
     @Path("/vn-pay")
     public Response pay(@Context HttpServletRequest request) throws AppException {
-        PaymentResponse response = paymentService.createVnPayPayment(request);
+        paymentResponse response = paymentService.createVnPayPayment(request);
         return Response.ok(ResponseModel.builder().data(response).build()).build();
     }
 
@@ -43,21 +43,11 @@ public class PaymentController {
     }
 
     @POST
-    @Path("/contract/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response payContract(@PathParam("id") Long id) throws AppException {
-        PaymentResponse response = paymentService.payForContract(id);
-        return Response.ok(ResponseModel.builder().data(response).build()).build();
-    }
-
-    @POST
     @Path("/milestone/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response payMilestone(@PathParam("id") Long id) throws AppException {
-        PaymentResponse response = paymentService.payForMilestone(id);
-        return Response.ok(ResponseModel.builder().data(response).build()).build();
+    public void payMilestone(@PathParam("id") Long id) throws AppException {
+        paymentService.payForMilestone(id);
     }
 
     @GET

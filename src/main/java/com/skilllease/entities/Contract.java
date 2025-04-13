@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -50,25 +49,8 @@ public class Contract {
     @Column(name = "contract_end_date")
     private LocalDateTime contractEndDate;
 
-    @Column(name = "support_availability")
-    private String supportAvailability; // e.g., "24/7 support"
-
     @Column(name = "additional_policy", columnDefinition = "TEXT")
     private String additionalPolicy;
-
-    @Column(name = "deposit_amount", nullable = false)
-    private BigDecimal depositAmount;
-
-    @Column(name = "final_payment_amount", nullable = false)
-    private BigDecimal finalPaymentAmount;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "deposit_status", nullable = false)
-    private DepositStatus depositStatus; // "pending", "paid"
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "final_payment_status", nullable = false)
-    private PaymentStatus finalPaymentStatus; // "pending", "paid"
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

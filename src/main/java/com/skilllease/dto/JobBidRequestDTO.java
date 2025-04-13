@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -14,10 +14,7 @@ public class JobBidRequestDTO {
     private Long jobId;
     private BigDecimal bidAmount;
     private String message;
-    private LocalDateTime proposedStartDate;
-    private LocalDateTime proposedEndDate;
-    private String supportAvailability;
+    private LocalDate proposedStartDate;
+    private LocalDate proposedEndDate;
     private String additionalPolicy;
-    private BigDecimal depositAmount;
-    private BigDecimal finalPaymentAmount;
 }

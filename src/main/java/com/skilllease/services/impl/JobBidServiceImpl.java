@@ -45,11 +45,8 @@ public class JobBidServiceImpl implements JobBidService {
         bid.setCreatedAt(LocalDateTime.now());
         bid.setProposedStartDate(dto.getProposedStartDate());
         bid.setProposedEndDate(dto.getProposedEndDate());
-        bid.setSupportAvailability(dto.getSupportAvailability());
         bid.setAdditionalPolicy(dto.getAdditionalPolicy());
         bid.setStatus("pending");
-        bid.setDepositAmount(dto.getDepositAmount());
-        bid.setFinalPaymentAmount(dto.getFinalPaymentAmount());
 
         return jobBidRepository.save(bid);
     }

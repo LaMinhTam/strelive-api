@@ -2,6 +2,7 @@ package com.skilllease.services;
 
 import com.skilllease.dto.JobCreateDto;
 import com.skilllease.dto.JobDetailDTO;
+import com.skilllease.dto.JobDto;
 import com.skilllease.entities.Job;
 import com.skilllease.exception.AppException;
 import com.skilllease.exception.EntityNotFoundException;
@@ -15,12 +16,12 @@ public interface JobService {
 
     JobDetailDTO getJob(Long id) throws AppException;
 
-    List<Job> getAllJobs();
+    List<JobDto> getAllJobs();
 
-    List<Job> getJobsByEmployer(Long employerId);
+    List<JobDto> getJobsByEmployer(Long employerId);
 
     @Transactional
-    Job updateJob(Long id, JobCreateDto updatedJob) throws EntityNotFoundException;
+    JobDto updateJob(Long id, JobCreateDto updatedJob) throws EntityNotFoundException;
 
     @Transactional
     void deleteJob(Long id);

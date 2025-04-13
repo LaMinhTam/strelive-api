@@ -23,18 +23,16 @@ public class MilestoneController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({"EMPLOYER", "FREELANCER"})
-    public Response getMilestones(@QueryParam("contractId") Long contractId) {
-        return Response.ok(ResponseModel.builder().data(milestoneService.findMilestonesByContract(contractId)).build()).build();
+    public Response getMilestones(@QueryParam("JobId") Long jobId) {
+        return Response.ok(ResponseModel.builder().data(milestoneService.findMilestonesByJobId(jobId)).build()).build();
     }
 
-    @POST
-    @Path("/instruction")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @GET
+    @Path("/contract/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed("EMPLOYER")
-    public Response createMilestoneInstruction(CreateMilestoneInstructionDto dto) throws AppException {
-        Milestone milestone = milestoneService.createMilestoneInstruction(dto);
-        return Response.status(Response.Status.CREATED).entity(ResponseModel.builder().data(milestone).build()).build();
+    @RolesAllowed({"EMPLOYER", "FREELANCER"})
+    public Response getMilestonesByContract(@PathParam("id") Long contractId) throws AppException {
+        return Response.ok(ResponseModel.builder().data(milestoneService.findMilestonesByContractId(contractId)).build()).build();
     }
 
     @PUT

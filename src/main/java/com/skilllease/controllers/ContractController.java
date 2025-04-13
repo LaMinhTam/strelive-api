@@ -58,12 +58,4 @@ public class ContractController {
         Contract updatedContract = contractService.updateContractStatus(id, statusDto.getStatus());
         return Response.ok(ResponseModel.builder().data(updatedContract).build()).build();
     }
-
-    @PUT
-    @Path("/{id}/finalize")
-    @RolesAllowed("EMPLOYER")
-    public Response finalizeContract(@PathParam("id") Long id) throws AppException {
-        Contract finalizedContract = contractService.finalizeContract(id);
-        return Response.ok(ResponseModel.builder().data(finalizedContract).build()).build();
-    }
 }

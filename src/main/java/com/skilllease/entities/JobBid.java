@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -21,6 +22,7 @@ public class JobBid {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "job_post_id", nullable = false)
+    @JsonIgnore
     private Job job;
 
     @ManyToOne(optional = false)
@@ -29,12 +31,6 @@ public class JobBid {
 
     @Column(name = "bid_amount", nullable = false)
     private BigDecimal bidAmount;
-
-    @Column(name = "deposit_amount", nullable = false)
-    private BigDecimal depositAmount;
-
-    @Column(name = "final_payment_amount", nullable = false)
-    private BigDecimal finalPaymentAmount;
 
     @Column(columnDefinition = "TEXT")
     private String message;
@@ -46,13 +42,10 @@ public class JobBid {
     private String status; // "pending", "accepted", "rejected"
 
     @Column(name = "proposed_start_date")
-    private LocalDateTime proposedStartDate;
+    private LocalDate proposedStartDate;
 
     @Column(name = "proposed_end_date")
-    private LocalDateTime proposedEndDate;
-
-    @Column(name = "support_availability")
-    private String supportAvailability;
+    private LocalDate proposedEndDate;
 
     @Column(name = "additional_policy", columnDefinition = "TEXT")
     private String additionalPolicy;

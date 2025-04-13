@@ -16,12 +16,6 @@ import java.util.List;
 public interface JobMapper {
     JobMapper INSTANCE = Mappers.getMapper(JobMapper.class);
 
-    // Convert JobCreateDto to Job entity
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
-    @Mapping(target = "employer", ignore = true) // Set employer manually in service
-    Job toEntity(JobCreateDto jobCreateDto);
-
     // Convert Job entity to JobDto
     @Mapping(target = "employer", source = "employer", qualifiedByName = "mapUserToDto")
     JobDto toDto(Job job);

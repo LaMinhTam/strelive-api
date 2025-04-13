@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class PaymentResponse {
+public class paymentResponse {
     private String code;
     private String message;
     private String paymentUrl;

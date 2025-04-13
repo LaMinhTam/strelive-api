@@ -1,37 +1,12 @@
 version: "3.9"
 services:
-  rtmp:
-    build: ./rtmp
-    ports:
-      - "1935:1935"
-      - "9080:9080"
-    container_name: rtmp_server
-    devices:
-      - /dev/fuse
-    cap_add:
-      - SYS_ADMIN
-    security_opt:
-      - apparmor:unconfined
-    volumes:
-      - ./hls_storage:/var/tmp/hls
-      - ./recordings:/var/tmp/recordings
-    networks:
-      - strelive-net
-
   skilllease-api:
     build: ./
     ports:
       - "8080:8080"
-    container_name: strelive_api
-    environment:
-      - HLS_DIRECTORY=/app/hls_storage/
-      - THUMBNAIL_API_HOST=host.docker.internal
-    volumes:
-      - ./hls_storage:/app/hls_storage
-    depends_on:
-      - rtmp
+    container_name: skilllease_api
     networks:
-      - strelive-net
+      - skilllease-net
 
   postgres:
     image: postgres:16.6
@@ -39,22 +14,16 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: strelive-db
+      POSTGRES_DB: skilllease-db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - strelive-net
+      - skilllease-net
 
 volumes:
   postgres_data:
-  hls_storage:
-    driver: local
-    driver_opts:
-      type: none
-      device: ${PWD}/hls_storage
-      o: bind
 networks:
-  strelive-net:
+  skilllease-net:
     driver: bridge

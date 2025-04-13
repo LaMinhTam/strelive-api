@@ -68,24 +68,19 @@ CREATE TABLE IF NOT EXISTS job_bids
 
 CREATE TABLE IF NOT EXISTS contracts
 (
-    id                   BIGSERIAL PRIMARY KEY,
-    employer_id          BIGINT         NOT NULL,
-    freelancer_id        BIGINT         NOT NULL,
-    contract_type        VARCHAR(50)    NOT NULL, -- "direct" or "bid"
-    service_id           BIGINT,
-    job_bid_id           INT,
-    contract_start_date  TIMESTAMP      NOT NULL,
-    contract_end_date    TIMESTAMP,
-    support_availability VARCHAR(255),
-    additional_policy    TEXT,
-    deposit_amount       DECIMAL(10, 2) NOT NULL,
-    final_payment_amount DECIMAL(10, 2) NOT NULL,
-    deposit_status       VARCHAR(20)    NOT NULL CHECK (deposit_status IN ('PENDING', 'PAID')),
-    final_payment_status VARCHAR(20)    NOT NULL CHECK (final_payment_status IN ('PENDING', 'PAID')),
-    created_at           TIMESTAMP      NOT NULL,
-    employer_accepted    BOOLEAN,
-    freelancer_accepted  BOOLEAN,
-    status               VARCHAR(20)    NOT NULL, -- e.g., "draft", "negotiation", "active", "completed", "cancelled"
+    id                  BIGSERIAL PRIMARY KEY,
+    employer_id         BIGINT      NOT NULL,
+    freelancer_id       BIGINT      NOT NULL,
+    contract_type       VARCHAR(50) NOT NULL, -- "direct" or "bid"
+    service_id          BIGINT,
+    job_bid_id          BIGINT,
+    contract_start_date TIMESTAMP   NOT NULL,
+    contract_end_date   TIMESTAMP,
+    additional_policy   TEXT,
+    created_at          TIMESTAMP   NOT NULL,
+    employer_accepted   BOOLEAN,
+    freelancer_accepted BOOLEAN,
+    status              VARCHAR(20) NOT NULL, -- e.g., "draft", "negotiation", "active", "completed", "cancelled"
     FOREIGN KEY (employer_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (freelancer_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (service_id) REFERENCES services (id) ON DELETE SET NULL,
@@ -95,21 +90,21 @@ CREATE TABLE IF NOT EXISTS contracts
 CREATE TABLE IF NOT EXISTS milestones
 (
     id                  BIGSERIAL PRIMARY KEY,
-    contract_id         INTEGER      NOT NULL,
-    title               VARCHAR(255) NOT NULL,
+    job_id              BIGINT         NOT NULL,
+    title               VARCHAR(255)   NOT NULL,
     description         TEXT,
-    due_date            TIMESTAMP,
-    created_at          TIMESTAMP    NOT NULL,
-    updated_at          TIMESTAMP,
+    start_date          DATE,
+    due_date            DATE,
     deliverable_url     VARCHAR(255),
-    submission_type     VARCHAR(20)  NOT NULL CHECK (submission_type IN ('FILE', 'LINK', 'PREVIEW')),
-    review_status       VARCHAR(20)  NOT NULL CHECK (review_status IN ('PENDING', 'APPROVED', 'REJECTED', 'IN_PROGRESS')),
+    submission_type     VARCHAR(20) CHECK (submission_type IN ('FILE', 'LINK', 'PREVIEW')),
+    review_status       VARCHAR(20) CHECK (review_status IN ('PENDING', 'APPROVED', 'REJECTED', 'IN_PROGRESS')),
     feedback            TEXT,
-    final_milestone     BOOLEAN      NOT NULL DEFAULT FALSE,
-    hidden              BOOLEAN      NOT NULL DEFAULT FALSE,
+    hidden              BOOLEAN DEFAULT FALSE,
     fulfillment_comment TEXT,
     checklist           TEXT,
-    FOREIGN KEY (contract_id) REFERENCES contracts (id) ON DELETE CASCADE
+    amount              DECIMAL(10, 2) NOT NULL,
+    effort              INT,
+    FOREIGN KEY (job_id) REFERENCES jobs (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS wallets

@@ -21,11 +21,11 @@ public interface ContractService {
     @Transactional
     Contract updateContractStatus(Long id, ContractStatus status) throws AppException;
 
-    Contract finalizeContract(Long id) throws AppException;
-
     Contract save(Contract contract);
 
     JobDetailDTO getContractsByJob(Long jobId) throws AppException;
 
     List<JobDetailDTO> getAllContracts();
+
+    Contract getContractByJobId(Long jobId) throws AppException;
 }
