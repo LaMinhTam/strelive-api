@@ -5,25 +5,14 @@ services:
     ports:
       - "8080:8080"
     container_name: skilllease_api
+#    environment:
+#      - DB_HOST=<DB_HOST>
+#      - DB_NAME=<DB_NAME>
+#      - DB_USER=<DB_USER>
+#      - DB_PASS=<DB_PASS>
     networks:
       - skilllease-net
 
-  postgres:
-    image: postgres:16.6
-    container_name: postgres_db
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_DB: skilllease-db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - skilllease-net
-
-volumes:
-  postgres_data:
 networks:
   skilllease-net:
     driver: bridge
